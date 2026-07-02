@@ -115,3 +115,37 @@ Copy this block for each completed packet:
 - SLA breach uses validate-time check only; scheduler deferred.
 - Investigation completion comments use `on_update_after_submit` (Frappe update-after-submit path).
 
+---
+
+## Packet 03 — Permissions baseline and IKS guardrails (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added custom roles: SRM Admin, SRM Case Manager, SRM Analyst, SRM Viewer (patch + helper).
+- Applied role-based DocType permissions on SRM Incident, SRM Investigation, SRM Sentiment Capture.
+- Preserved System Manager full access on all three DocTypes.
+- Added IKS guardrails on SRM Incident (close/resolution_summary restrictions, audit fields).
+- Added `test_iks_permissions.py` with 6 tests (14 total across app).
+
+### Files changed
+- `srm_core/services/permissions.py` (new)
+- `srm_core/patches/v1_0/create_srm_roles.py` (new)
+- `srm_core/patches.txt` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_investigation/srm_investigation.json` (updated)
+- `srm_core/srm_core/doctype/srm_sentiment_capture/srm_sentiment_capture.json` (updated)
+- `srm_core/srm_core/tests/test_iks_permissions.py` (new)
+- `srm_core/srm_core/tests/test_core_doctypes.py` (updated)
+- `srm_core/srm_core/tests/test_lifecycle_workflow.py` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS (14 tests in 2.086s)
+
+### Notes / follow-ups
+- IKS close guard applies when transitioning to Closed, not on every save while already closed.
+- Role-permission enforcement at desk layer; server-side IKS checks are additive guardrails.
+

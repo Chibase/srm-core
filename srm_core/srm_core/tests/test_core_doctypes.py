@@ -6,6 +6,9 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestCoreDoctypes(FrappeTestCase):
+	def setUp(self):
+		frappe.set_user("Administrator")
+
 	def _make_incident(self, **overrides):
 		data = {
 			"doctype": "SRM Incident",

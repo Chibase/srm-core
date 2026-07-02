@@ -21,6 +21,8 @@
   "section_break_compliance",
   "iks_sensitive",
   "consent_obtained",
+  "last_sensitive_action_by",
+  "last_sensitive_action_on",
   "section_break_sla",
   "sla_due_date",
   "sla_breached",
@@ -122,6 +124,21 @@
    "label": "Consent Obtained"
   },
   {
+   "allow_on_submit": 1,
+   "fieldname": "last_sensitive_action_by",
+   "fieldtype": "Link",
+   "label": "Last Sensitive Action By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "last_sensitive_action_on",
+   "fieldtype": "Datetime",
+   "label": "Last Sensitive Action On",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_break_sla",
    "fieldtype": "Section Break",
    "label": "SLA"
@@ -181,6 +198,41 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Admin",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Case Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "SRM Analyst",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "SRM Viewer"
   }
  ],
  "sort_field": "modified",

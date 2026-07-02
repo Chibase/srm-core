@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_to_date, cint, get_datetime, now_datetime
 
+from srm_core.services.permissions import user_has_iks_privileged_role
 from srm_core.services.statuses import (
 	INCIDENT_CLOSED,
 	INCIDENT_DRAFT,
@@ -37,6 +38,8 @@ class SRMIncident(Document):
 		if cint(self.iks_sensitive) and not cint(self.consent_obtained):
 			frappe.throw(_("Consent must be obtained for IKS-sensitive incidents."))
 
+		self._validate_iks_guardrails()
+
 		if self.status in INCIDENT_RESOLUTION_REQUIRED_STATUSES and not self.resolution_summary:
 			frappe.throw(
 				_("Resolution summary is required when status is Resolved or Closed.")
@@ -59,7 +62,43 @@ class SRMIncident(Document):
 		if self.name and not self.is_new() and self.docstatus == 1:
 			self._persist_computed_fields()
 
+	def _validate_iks_guardrails(self):
+		if not cint(self.iks_sensitive):
+			return
+
+		previous = self.get_doc_before_save()
+		closing = self.status == INCIDENT_CLOSED and (
+			self.is_new() or not previous or previous.status != INCIDENT_CLOSED
+		)
+		if closing and not user_has_iks_privileged_role():
+			frappe.throw(
+				_("Only SRM Admin or System Manager can close IKS-sensitive incidents.")
+			)
+
+		if self.docstatus == 1 and self.has_value_changed("resolution_summary"):
+			if not user_has_iks_privileged_role():
+				frappe.throw(
+					_(
+						"Only SRM Admin or System Manager can edit resolution summary on "
+						"IKS-sensitive incidents after submission."
+					)
+				)
+			self._apply_iks_audit_trail()
+
+		if (
+			self.docstatus == 1
+			and self.has_value_changed("status")
+			and user_has_iks_privileged_role()
+		):
+			self._apply_iks_audit_trail()
+
+	def _apply_iks_audit_trail(self):
+		self.last_sensitive_action_by = frappe.session.user
+		self.last_sensitive_action_on = now_datetime()
+		if self.name:
+			self.db_set("last_sensitive_action_by", self.last_sensitive_action_by, update_modified=False)
+			self.db_set("last_sensitive_action_on", self.last_sensitive_action_on, update_modified=False)
+
 	def _persist_computed_fields(self):
 		self.db_set("sla_breached", self.sla_breached, update_modified=False)
 		self.db_set("closed_on", self.closed_on, update_modified=False)
-

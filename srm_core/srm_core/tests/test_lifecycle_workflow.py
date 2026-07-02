@@ -13,6 +13,9 @@ from srm_core.services.statuses import (
 
 
 class TestLifecycleWorkflow(FrappeTestCase):
+	def setUp(self):
+		frappe.set_user("Administrator")
+
 	def _make_incident(self, **overrides):
 		data = {
 			"doctype": "SRM Incident",
