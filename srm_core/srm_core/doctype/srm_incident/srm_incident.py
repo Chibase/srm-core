@@ -12,7 +12,12 @@ from srm_core.services.impact import (
 	score_to_band,
 	validate_impact_assessment_rows,
 )
-from srm_core.services.permissions import user_has_iks_privileged_role
+from srm_core.services.investigation_tasks import (
+	format_blocking_tasks_message,
+	get_blocking_tasks,
+	validate_investigation_task_rows,
+)
+from srm_core.services.permissions import user_has_iks_privileged_role, user_has_system_manager_role
 from srm_core.services.priority import (
 	compute_priority_score,
 	priority_band,
@@ -51,6 +56,7 @@ class SRMIncident(Document):
 	def _run_incident_validations(self):
 		validate_geographic_area_link(self)
 		validate_impact_assessment_rows(self.impact_assessments)
+		validate_investigation_task_rows(self.investigation_tasks)
 		self._apply_impact_scoring()
 		self._apply_priority_and_sla()
 
@@ -58,6 +64,7 @@ class SRMIncident(Document):
 			frappe.throw(_("Consent must be obtained for IKS-sensitive incidents."))
 
 		self._validate_iks_guardrails()
+		self._validate_investigation_task_close_gate()
 
 		if self.status in INCIDENT_RESOLUTION_REQUIRED_STATUSES and not self.resolution_summary:
 			frappe.throw(
@@ -138,6 +145,18 @@ class SRMIncident(Document):
 			self.db_set("sla_target_hours", self.sla_target_hours, update_modified=False)
 			self.db_set("sla_due_by", self.sla_due_by, update_modified=False)
 			self.db_set("sla_due_date", self.sla_due_date, update_modified=False)
+
+	def _validate_investigation_task_close_gate(self):
+		previous = self.get_doc_before_save()
+		closing = self.status == INCIDENT_CLOSED and (
+			self.is_new() or not previous or previous.status != INCIDENT_CLOSED
+		)
+		if not closing:
+			return
+
+		blocking = get_blocking_tasks(self.investigation_tasks)
+		if blocking and not user_has_system_manager_role():
+			frappe.throw(format_blocking_tasks_message(blocking))
 
 	def _validate_iks_guardrails(self):
 		if not cint(self.iks_sensitive):

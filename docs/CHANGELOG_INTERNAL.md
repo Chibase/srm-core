@@ -284,3 +284,35 @@ Copy this block for each completed packet:
 - Sentiment fallback window (30 days) may be tuned after operational review.
 - Dashboard priority/SLA views deferred to later packet.
 
+---
+
+## Packet 08 — Investigation Tasking + Assignment Workflow (2026-07-02)
+
+**Commit:** `5372bee`
+
+### Summary
+- Added child-table DocType `SRM Investigation Task` with assignee, status flow, due date, and completion tracking.
+- Added `investigation_tasks` table on SRM Incident with validation for required fields, Done timestamps, duplicate open tasks, and past due dates on new rows.
+- Close-gate blocks Closed status when blocking tasks exist unless user has System Manager role.
+- Created `srm_core/services/investigation_tasks.py` with duplicate detection, blocking-task summarizer, and status transition helpers.
+- Added SRM Lead write permission on Incident for task management via parent edit.
+- Added `test_investigation_tasks.py` (9 tests; 46 total across app).
+
+### Files changed
+- `srm_core/services/investigation_tasks.py` (new)
+- `srm_core/services/permissions.py` (updated)
+- `srm_core/srm_core/doctype/srm_investigation_task/` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_investigation_tasks.py` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Task notifications/email automation deferred to later packet.
+- Assignee workload views deferred to later packet.
+

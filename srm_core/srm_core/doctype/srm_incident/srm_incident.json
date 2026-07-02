@@ -41,6 +41,8 @@
   "column_break_impact_score",
   "impact_scored_on",
   "impact_scored_by",
+  "section_break_investigation",
+  "investigation_tasks",
   "section_break_resolution",
   "resolution_summary",
   "closed_on"
@@ -278,6 +280,18 @@
    "read_only": 1
   },
   {
+   "fieldname": "section_break_investigation",
+   "fieldtype": "Section Break",
+   "label": "Investigation Tasks"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "investigation_tasks",
+   "fieldtype": "Table",
+   "label": "Investigation Tasks",
+   "options": "SRM Investigation Task"
+  },
+  {
    "fieldname": "section_break_resolution",
    "fieldtype": "Section Break",
    "label": "Resolution"
@@ -349,6 +363,11 @@
   {
    "read": 1,
    "role": "SRM Analyst",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "SRM Lead",
    "write": 1
   },
   {

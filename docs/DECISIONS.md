@@ -77,3 +77,12 @@ Copy this block for each new decision:
 - **Consequences:** Priority and SLA stay explainable and testable; sentiment linkage quality affects accuracy until direct links are populated.
 - **Alternatives considered:** Equal 50/50 impact/sentiment weighting; never recomputing SLA after create (stale targets after escalation).
 
+### ADR-007: Close-gate tied to unresolved investigation tasks
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 08 introduces structured investigation tasks on incidents; closing while tasks remain Open/In Progress/Blocked risks losing accountability for follow-up work.
+- **Decision:** Block transition to Closed when any investigation task is in Open, In Progress, or Blocked status. Validation lists up to five blocking task titles plus an overflow suffix. System Manager may override and close anyway.
+- **Consequences:** Closure quality improves; operators must complete or cancel tasks (or escalate to System Manager) before routine close.
+- **Alternatives considered:** Soft warnings only (ignored in practice); separate task DocType with no close coupling (weaker enforcement).
+

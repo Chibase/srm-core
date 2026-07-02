@@ -18,6 +18,11 @@ def user_has_iks_privileged_role(user=None):
 	return bool(set(frappe.get_roles(user)) & IKS_PRIVILEGED_ROLES)
 
 
+def user_has_system_manager_role(user=None):
+	user = user or frappe.session.user
+	return "System Manager" in frappe.get_roles(user)
+
+
 def ensure_srm_roles():
 	for role_name in SRM_ROLES:
 		if frappe.db.exists("Role", role_name):
