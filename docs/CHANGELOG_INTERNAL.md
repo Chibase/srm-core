@@ -481,7 +481,7 @@ Copy this block for each completed packet:
 
 ## Packet 14 — Risk Register Auto-Linking + Residual Risk Rollup (2026-07-02)
 
-**Commit:** _(see develop HEAD)_
+**Commit:** `662ae64`
 
 ### Summary
 - Added minimal `SRM Risk Register` DocType (link target only; no redesign) with `incident_references` touchpoint field.
