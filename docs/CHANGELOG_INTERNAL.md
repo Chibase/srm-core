@@ -348,3 +348,34 @@ Copy this block for each completed packet:
 - Escalation notifications/webhooks deferred to later packet.
 - Existing P1/P2 incidents may need owner/task assignment on next edit.
 
+---
+
+## Packet 10 — Incident Timeline Events (2026-07-02)
+
+**Commit:** `a0b3318`
+
+### Summary
+- Added append-only DocType `SRM Incident Event` with indexed incident/event_time, structured `details_json`, severity, and unique `idempotency_key`.
+- Created `srm_core/services/timeline.py` with event builders, diff helpers, emission, and `get_incident_timeline()`.
+- Hooked SRM Incident `after_insert`/`on_update`/`on_submit` to emit events on actual field/task diffs only.
+- Idempotent backfill patch creates baseline `INCIDENT_CREATED` and status snapshot events for existing incidents.
+- Added `test_incident_timeline.py` (9 tests; 65 total across app).
+
+### Files changed
+- `srm_core/services/timeline.py` (new)
+- `srm_core/srm_core/doctype/srm_incident_event/` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_incident_timeline.py` (new)
+- `srm_core/patches/v1_0/backfill_incident_timeline.py` (new)
+- `srm_core/patches.txt` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Timeline UI page deferred to later packet.
+- REST endpoint wrapper for `get_incident_timeline()` deferred.
+

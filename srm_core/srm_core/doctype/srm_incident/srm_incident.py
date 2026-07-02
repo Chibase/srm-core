@@ -38,6 +38,12 @@ from srm_core.services.statuses import (
 	INCIDENT_RESOLUTION_REQUIRED_STATUSES,
 	INCIDENT_TERMINAL_STATUSES,
 )
+from srm_core.services.timeline import (
+	EVENT_STATUS_CHANGED,
+	emit_incident_event,
+	emit_timeline_events_for_incident,
+	make_idempotency_key,
+)
 
 
 class SRMIncident(Document):
@@ -48,6 +54,7 @@ class SRMIncident(Document):
 		self._run_incident_validations()
 
 	def on_submit(self):
+		previous_status = self.status
 		if self.status == INCIDENT_DRAFT:
 			self.status = INCIDENT_OPEN
 			self.db_set("status", INCIDENT_OPEN)
@@ -59,6 +66,22 @@ class SRMIncident(Document):
 			self.db_set("sla_due_by", self.sla_due_by)
 
 		self._persist_computed_fields()
+
+		if previous_status != self.status:
+			snapshot = {"previous_status": previous_status, "current_status": self.status}
+			emit_incident_event(
+				incident=self.name,
+				event_type=EVENT_STATUS_CHANGED,
+				summary=f"Status changed: {previous_status} -> {self.status}",
+				details=snapshot,
+				idempotency_key=make_idempotency_key(self.name, EVENT_STATUS_CHANGED, snapshot),
+			)
+
+	def after_insert(self):
+		self._emit_timeline_events(is_insert=True)
+
+	def on_update(self):
+		self._emit_timeline_events(is_insert=False)
 
 	def _run_incident_validations(self):
 		validate_geographic_area_link(self)
@@ -259,3 +282,8 @@ class SRMIncident(Document):
 		self.db_set("closed_on", self.closed_on, update_modified=False)
 		self._persist_priority_and_sla()
 		self._persist_escalation()
+
+	def _emit_timeline_events(self, is_insert=False, previous=None):
+		if previous is None and not is_insert:
+			previous = self.get_doc_before_save()
+		emit_timeline_events_for_incident(self, previous=previous, is_insert=is_insert)

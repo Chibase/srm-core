@@ -95,3 +95,12 @@ Copy this block for each new decision:
 - **Consequences:** Escalation state is auditable and explainable; high-priority incidents cannot be saved without clear ownership and task assignment.
 - **Alternatives considered:** Separate Escalation DocType (more overhead); owner inferred from Frappe document owner field (less explicit for reassignment).
 
+### ADR-009: Append-only incident timeline with idempotency keys
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 10 needs an immutable audit trail of incident state transitions (score, priority, escalation, SLA, tasks, lifecycle) queryable without coupling to the mutable incident document.
+- **Decision:** Introduce standalone append-only `SRM Incident Event` rows inserted only by system code (`ignore_permissions` + DocType guards). Emit events on actual diffs after save via `after_insert`/`on_update` hooks; use deterministic SHA256-based `idempotency_key` per incident + event type + transition snapshot to suppress duplicates on no-op saves. Provide `get_incident_timeline()` server helper (permission check left to caller).
+- **Consequences:** Timeline is query-friendly and safe to backfill; event volume stays bounded on repeated saves.
+- **Alternatives considered:** Embedded JSON log on Incident (harder to query); Comment doctype reuse (weak structure and permissions).
+
