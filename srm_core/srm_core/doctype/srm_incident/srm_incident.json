@@ -79,6 +79,7 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -131,6 +132,7 @@
    "label": "SLA Due Date"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "sla_breached",
    "fieldtype": "Check",
@@ -143,11 +145,13 @@
    "label": "Resolution"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "resolution_summary",
    "fieldtype": "Small Text",
    "label": "Resolution Summary"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "closed_on",
    "fieldtype": "Datetime",
    "label": "Closed On",

@@ -47,6 +47,7 @@
    "label": "Target Close Date"
   },
   {
+   "allow_on_submit": 1,
    "default": "Open",
    "fieldname": "status",
    "fieldtype": "Select",

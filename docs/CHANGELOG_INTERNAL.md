@@ -84,3 +84,34 @@ Copy this block for each completed packet:
 - Replace `geographic_area_text` with Link to Geographic Area when that DocType is added.
 - Additional roles and workspace links deferred to later packets.
 
+---
+
+## Packet 02 ? Incident/Investigation lifecycle workflow (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added `srm_core/services/statuses.py` with shared incident/investigation status constants.
+- SRM Incident: submit transitions Draft?Open, default SLA due date (+72h), resolution/closed_on/SLA breach logic.
+- SRM Investigation: submit moves linked Open incident to Under Investigation; completion adds incident timeline comment.
+- Enabled `allow_on_submit` on lifecycle fields (status, sla_breached, resolution_summary, closed_on).
+- Added `test_lifecycle_workflow.py` with 5 lifecycle tests (8 total across app).
+
+### Files changed
+- `srm_core/services/__init__.py` (new)
+- `srm_core/services/statuses.py` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_investigation/srm_investigation.py` (updated)
+- `srm_core/srm_core/doctype/srm_investigation/srm_investigation.json` (updated)
+- `srm_core/srm_core/tests/test_lifecycle_workflow.py` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS (8 tests in 0.797s)
+
+### Notes / follow-ups
+- SLA breach uses validate-time check only; scheduler deferred.
+- Investigation completion comments use `on_update_after_submit` (Frappe update-after-submit path).
+
