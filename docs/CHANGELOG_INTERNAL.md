@@ -316,3 +316,35 @@ Copy this block for each completed packet:
 - Task notifications/email automation deferred to later packet.
 - Assignee workload views deferred to later packet.
 
+---
+
+## Packet 09 — Escalation Rules + Assignment Enforcement (2026-07-02)
+
+**Commit:** `9ff3cf9`
+
+### Summary
+- Added read-only escalation fields on SRM Incident: `is_escalated`, `escalation_level`, `escalated_on`, `escalated_by`, plus editable `requires_executive_attention` and `escalation_reason`.
+- Added `incident_owner` (Link User) for assignment accountability.
+- Created `srm_core/services/escalation.py` with deterministic L1–L3 derivation, `[AUTO]` reason handling, and P1/P2 assignment enforcement.
+- Escalation computed after priority/SLA logic; SLA breach included in L2 path.
+- Idempotent backfill patch for existing incidents.
+- Added `test_escalation_rules.py` (10 tests; 56 total across app).
+
+### Files changed
+- `srm_core/services/escalation.py` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_escalation_rules.py` (new)
+- `srm_core/patches/v1_0/backfill_incident_escalation.py` (new)
+- `srm_core/patches.txt` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Escalation notifications/webhooks deferred to later packet.
+- Existing P1/P2 incidents may need owner/task assignment on next edit.
+

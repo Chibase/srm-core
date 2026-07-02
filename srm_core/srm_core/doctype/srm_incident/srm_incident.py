@@ -6,6 +6,13 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_to_date, cint, flt, get_datetime, now_datetime
 
+from srm_core.services.escalation import (
+	ESCALATION_NONE,
+	derive_escalation_level,
+	resolve_escalation_reason,
+	should_refresh_escalation_stamp,
+	validate_high_priority_assignment,
+)
 from srm_core.services.geographic_area import validate_geographic_area_link
 from srm_core.services.impact import (
 	compute_weighted_score,
@@ -85,6 +92,13 @@ class SRMIncident(Document):
 			)
 		)
 
+		self._apply_escalation()
+		validate_high_priority_assignment(
+			self.priority_level,
+			self.incident_owner,
+			self.investigation_tasks,
+		)
+
 		if self.name and not self.is_new() and self.docstatus == 1:
 			self._persist_computed_fields()
 
@@ -146,6 +160,51 @@ class SRMIncident(Document):
 			self.db_set("sla_due_by", self.sla_due_by, update_modified=False)
 			self.db_set("sla_due_date", self.sla_due_date, update_modified=False)
 
+	def _apply_escalation(self):
+		previous = self.get_doc_before_save()
+		previous_level = previous.escalation_level if previous else None
+		was_escalated = cint(previous.is_escalated) if previous else 0
+
+		requires_exec = cint(self.requires_executive_attention)
+		new_level = derive_escalation_level(
+			self.priority_level,
+			self.impact_band,
+			requires_exec,
+			cint(self.sla_breached),
+		)
+		is_escalated = cint(new_level != ESCALATION_NONE)
+
+		self.escalation_level = new_level
+		self.is_escalated = is_escalated
+
+		if is_escalated and (
+			not self.escalated_on
+			or should_refresh_escalation_stamp(
+				previous_level, new_level, was_escalated, is_escalated
+			)
+		):
+			self.escalated_on = now_datetime()
+			self.escalated_by = frappe.session.user
+
+		self.escalation_reason = resolve_escalation_reason(
+			self.escalation_reason,
+			new_level,
+			self.priority_level,
+			cint(self.sla_breached),
+			self.impact_band,
+			requires_exec=requires_exec,
+		)
+
+		if self.name:
+			self._persist_escalation()
+
+	def _persist_escalation(self):
+		self.db_set("is_escalated", self.is_escalated, update_modified=False)
+		self.db_set("escalation_level", self.escalation_level, update_modified=False)
+		self.db_set("escalated_on", self.escalated_on, update_modified=False)
+		self.db_set("escalated_by", self.escalated_by, update_modified=False)
+		self.db_set("escalation_reason", self.escalation_reason, update_modified=False)
+
 	def _validate_investigation_task_close_gate(self):
 		previous = self.get_doc_before_save()
 		closing = self.status == INCIDENT_CLOSED and (
@@ -199,3 +258,4 @@ class SRMIncident(Document):
 		self.db_set("sla_breached", self.sla_breached, update_modified=False)
 		self.db_set("closed_on", self.closed_on, update_modified=False)
 		self._persist_priority_and_sla()
+		self._persist_escalation()

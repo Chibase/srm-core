@@ -16,6 +16,7 @@
   "project",
   "severity",
   "status",
+  "incident_owner",
   "section_break_details",
   "description",
   "immediate_action_taken",
@@ -34,6 +35,14 @@
   "sla_due_by",
   "sla_due_date",
   "sla_breached",
+  "section_break_escalation",
+  "is_escalated",
+  "escalation_level",
+  "column_break_escalation",
+  "escalated_on",
+  "escalated_by",
+  "requires_executive_attention",
+  "escalation_reason",
   "section_break_impact",
   "impact_assessments",
   "impact_score",
@@ -115,6 +124,13 @@
    "label": "Status",
    "options": "Draft\nOpen\nUnder Investigation\nResolved\nClosed",
    "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "incident_owner",
+   "fieldtype": "Link",
+   "label": "Incident Owner",
+   "options": "User"
   },
   {
    "fieldname": "section_break_details",
@@ -232,6 +248,62 @@
    "fieldtype": "Check",
    "label": "SLA Breached",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_escalation",
+   "fieldtype": "Section Break",
+   "label": "Escalation"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "is_escalated",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Escalated",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "None",
+   "fieldname": "escalation_level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Escalation Level",
+   "options": "None\nL1\nL2\nL3",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_escalation",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "escalated_on",
+   "fieldtype": "Datetime",
+   "label": "Escalated On",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "escalated_by",
+   "fieldtype": "Link",
+   "label": "Escalated By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "requires_executive_attention",
+   "fieldtype": "Check",
+   "label": "Requires Executive Attention"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "escalation_reason",
+   "fieldtype": "Small Text",
+   "label": "Escalation Reason"
   },
   {
    "fieldname": "section_break_impact",

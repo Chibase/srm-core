@@ -11,7 +11,11 @@ from srm_core.services.impact import (
 	score_to_band,
 	severity_to_ordinal,
 )
-from srm_core.srm_core.tests.test_helpers import ensure_geographic_area, ensure_impact_taxonomy
+from srm_core.srm_core.tests.test_helpers import (
+	ensure_geographic_area,
+	ensure_high_priority_assignment,
+	ensure_impact_taxonomy,
+)
 
 
 class TestImpactScoring(FrappeTestCase):
@@ -70,6 +74,7 @@ class TestImpactScoring(FrappeTestCase):
 				{"impact_taxonomy": taxonomy, "observed_severity": "High"},
 			]
 		)
+		ensure_high_priority_assignment(doc)
 		doc.insert()
 		self.assertEqual(doc.impact_score, 80.0)
 		self.assertEqual(doc.impact_band, "Critical")

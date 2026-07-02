@@ -6,7 +6,11 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import random_string
 
 from srm_core.services.impact import severity_to_ordinal
-from srm_core.srm_core.tests.test_helpers import ensure_geographic_area, ensure_impact_taxonomy
+from srm_core.srm_core.tests.test_helpers import (
+	ensure_geographic_area,
+	ensure_high_priority_assignment,
+	ensure_impact_taxonomy,
+)
 
 
 class TestImpactAssessment(FrappeTestCase):
@@ -60,6 +64,7 @@ class TestImpactAssessment(FrappeTestCase):
 				}
 			]
 		)
+		ensure_high_priority_assignment(doc)
 		doc.insert()
 		self.assertEqual(len(doc.impact_assessments), 1)
 		self.assertEqual(doc.impact_assessments[0].impact_taxonomy, taxonomy)

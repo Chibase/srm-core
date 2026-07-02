@@ -86,3 +86,12 @@ Copy this block for each new decision:
 - **Consequences:** Closure quality improves; operators must complete or cancel tasks (or escalate to System Manager) before routine close.
 - **Alternatives considered:** Soft warnings only (ignored in practice); separate task DocType with no close coupling (weaker enforcement).
 
+### ADR-008: Escalation precedence, auto-reason policy, and assignment enforcement
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 09 needs deterministic escalation tied to priority, impact, SLA breach, and executive-attention signals, plus accountability for high-priority incidents.
+- **Decision:** Derive escalation level with highest-wins precedence (L3: P1-Critical, Critical impact band, or executive-attention flag; L2: P2-High or SLA breach; L1: P3-Medium). Auto-generate escalation reasons with `[AUTO]` prefix when blank; preserve manual reasons. Keep historical `escalated_on`/`escalated_by` on de-escalation; refresh stamps on first escalate or level increase. Use canonical `incident_owner` (Link User) for ownership; require owner plus at least one assigned investigation task for P1/P2 incidents.
+- **Consequences:** Escalation state is auditable and explainable; high-priority incidents cannot be saved without clear ownership and task assignment.
+- **Alternatives considered:** Separate Escalation DocType (more overhead); owner inferred from Frappe document owner field (less explicit for reassignment).
+

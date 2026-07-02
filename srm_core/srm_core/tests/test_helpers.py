@@ -35,3 +35,25 @@ def ensure_impact_taxonomy(name="Community Trust", **overrides):
 	data.update(overrides)
 	frappe.get_doc(data).insert(ignore_permissions=True)
 	return name
+
+
+def ensure_high_priority_assignment(doc, assignee="Administrator", task_title="Review incident"):
+	"""Set owner and task row required for P1/P2 incident validation."""
+	if not doc.get("incident_owner"):
+		doc.incident_owner = assignee
+
+	has_task = any(
+		row.assignee and row.status in {"Open", "In Progress", "Blocked", "Done"}
+		for row in (doc.investigation_tasks or [])
+	)
+	if not has_task:
+		doc.append(
+			"investigation_tasks",
+			{
+				"task_title": task_title,
+				"assignee": assignee,
+				"status": "Open",
+				"priority": "Medium",
+			},
+		)
+	return doc

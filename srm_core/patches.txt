@@ -7,3 +7,4 @@ srm_core.patches.v1_0.create_srm_roles
 srm_core.patches.v1_0.migrate_geographic_area_links
 srm_core.patches.v1_0.seed_default_impact_taxonomy
 srm_core.patches.v1_0.backfill_incident_priority_sla
+srm_core.patches.v1_0.backfill_incident_escalation

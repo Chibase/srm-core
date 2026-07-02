@@ -17,6 +17,7 @@ from srm_core.services.priority import (
 )
 from srm_core.srm_core.tests.test_helpers import (
 	ensure_geographic_area,
+	ensure_high_priority_assignment,
 	ensure_impact_taxonomy,
 )
 
@@ -92,6 +93,7 @@ class TestPriorityEngine(FrappeTestCase):
 				{"impact_taxonomy": taxonomy, "observed_severity": "Very High"},
 			],
 		)
+		ensure_high_priority_assignment(doc)
 		doc.insert()
 		self._make_sentiment(area, -100, linked_incident=doc.name)
 		doc.save()
@@ -118,6 +120,7 @@ class TestPriorityEngine(FrappeTestCase):
 			"impact_assessments",
 			{"impact_taxonomy": taxonomy, "observed_severity": "Very High"},
 		)
+		ensure_high_priority_assignment(doc)
 		before_escalation = now_datetime()
 		doc.save()
 		doc.reload()
@@ -141,6 +144,7 @@ class TestPriorityEngine(FrappeTestCase):
 		doc.reload()
 		frozen_due = doc.sla_due_by
 
+		ensure_high_priority_assignment(doc)
 		doc.append(
 			"impact_assessments",
 			{
