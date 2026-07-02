@@ -1,0 +1,109 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-07-02 12:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "capture_date",
+  "geographic_area_text",
+  "stakeholder_group",
+  "source_type",
+  "column_break_1",
+  "sentiment_score",
+  "confidence_score",
+  "linked_incident",
+  "section_break_notes",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "capture_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Capture Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "geographic_area_text",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Geographic Area",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stakeholder_group",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Stakeholder Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_type",
+   "fieldtype": "Select",
+   "label": "Source Type",
+   "options": "Survey\nInterview\nCommunity Meeting\nSocial Media\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sentiment_score",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Sentiment Score (-100 to 100)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "confidence_score",
+   "fieldtype": "Float",
+   "label": "Confidence Score (0 to 1)"
+  },
+  {
+   "fieldname": "linked_incident",
+   "fieldtype": "Link",
+   "label": "Linked Incident",
+   "options": "SRM Incident"
+  },
+  {
+   "fieldname": "section_break_notes",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2026-07-02 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Srm Core",
+ "name": "SRM Sentiment Capture",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
+

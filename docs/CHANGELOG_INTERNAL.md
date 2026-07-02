@@ -1,4 +1,4 @@
-# SRM Core ??? Internal Changelog
+# SRM Core ? Internal Changelog
 
 Per-packet record of changes for implementation tracking. Public-facing release notes may be derived from this log later.
 
@@ -9,7 +9,7 @@ Per-packet record of changes for implementation tracking. Public-facing release 
 Copy this block for each completed packet:
 
 ```markdown
-## Packet NN ??? <Name> (YYYY-MM-DD)
+## Packet NN ? <Name> (YYYY-MM-DD)
 
 **Commit:** `<short-hash>` on `develop`
 
@@ -29,7 +29,7 @@ Copy this block for each completed packet:
 
 ---
 
-## Packet 00 ??? Structure baseline (2026-07-02)
+## Packet 00 ? Structure baseline (2026-07-02)
 
 **Commit:** _(see develop HEAD after push)_
 
@@ -48,8 +48,39 @@ Copy this block for each completed packet:
 
 ### Migration / tests
 - migrate: PASS
-- run-tests: PASS (0 tests ??? no test modules yet)
+- run-tests: PASS (0 tests ? no test modules yet)
 
 ### Notes / follow-ups
-- Packet 01 (Geographic Area DocType) is next per BUILD_PLAN.
+- Packet 01 (Core DocTypes skeleton) is next per BUILD_PLAN.
+
+---
+
+## Packet 01 ? Core DocTypes skeleton (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added submittable DocTypes: SRM Incident, SRM Investigation.
+- Added non-submittable DocType: SRM Sentiment Capture.
+- Used `geographic_area_text` (Data) because Geographic Area DocType does not exist yet.
+- Added baseline validation on SRM Incident (IKS consent, resolution summary on submitted Resolved/Closed).
+- Added baseline validation on SRM Investigation (target close date vs opened on).
+- Added System Manager permissions on all three DocTypes.
+- Added `test_core_doctypes.py` with 3 validation tests.
+
+### Files changed
+- `srm_core/srm_core/doctype/__init__.py` (new)
+- `srm_core/srm_core/doctype/srm_incident/` (new)
+- `srm_core/srm_core/doctype/srm_investigation/` (new)
+- `srm_core/srm_core/doctype/srm_sentiment_capture/` (new)
+- `srm_core/srm_core/tests/` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS (3 tests in 0.857s)
+
+### Notes / follow-ups
+- Replace `geographic_area_text` with Link to Geographic Area when that DocType is added.
+- Additional roles and workspace links deferred to later packets.
 
