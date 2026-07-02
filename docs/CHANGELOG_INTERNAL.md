@@ -222,3 +222,32 @@ Copy this block for each completed packet:
 - Scoring engine intentionally deferred to Packet 06.
 - Impact assessments use child-table pattern (incident link implicit via parent).
 
+---
+
+## Packet 06 — Taxonomy-weighted impact scoring (2026-07-02)
+
+**Commit:** `d2ec019`
+
+### Summary
+- Implemented deterministic impact scoring from `impact_assessments` child rows.
+- Added read-only incident fields: `impact_score`, `impact_band`, `impact_scored_on`, `impact_scored_by`.
+- Extended `srm_core/services/impact.py` with `compute_weighted_score`, `score_to_band`, and severity/weight guards.
+- Recompute on every validate; zero-row fallback to score 0 / band Low.
+- Added `test_impact_scoring.py` (6 tests; 31 total across app).
+
+### Files changed
+- `srm_core/services/impact.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_impact_scoring.py` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Dashboard/charts for impact trends deferred to later packet.
+- Band thresholds may be recalibrated after stakeholder review.
+

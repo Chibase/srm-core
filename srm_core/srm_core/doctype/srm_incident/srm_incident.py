@@ -7,7 +7,11 @@ from frappe.model.document import Document
 from frappe.utils import add_to_date, cint, get_datetime, now_datetime
 
 from srm_core.services.geographic_area import validate_geographic_area_link
-from srm_core.services.impact import validate_impact_assessment_rows
+from srm_core.services.impact import (
+	compute_weighted_score,
+	score_to_band,
+	validate_impact_assessment_rows,
+)
 from srm_core.services.permissions import user_has_iks_privileged_role
 from srm_core.services.statuses import (
 	INCIDENT_CLOSED,
@@ -39,6 +43,7 @@ class SRMIncident(Document):
 	def _run_incident_validations(self):
 		validate_geographic_area_link(self)
 		validate_impact_assessment_rows(self.impact_assessments)
+		self._apply_impact_scoring()
 
 		if cint(self.iks_sensitive) and not cint(self.consent_obtained):
 			frappe.throw(_("Consent must be obtained for IKS-sensitive incidents."))
@@ -66,6 +71,25 @@ class SRMIncident(Document):
 
 		if self.name and not self.is_new() and self.docstatus == 1:
 			self._persist_computed_fields()
+
+	def _apply_impact_scoring(self):
+		if self.impact_assessments:
+			self.impact_score = compute_weighted_score(self.impact_assessments)
+		else:
+			self.impact_score = 0.0
+
+		self.impact_band = score_to_band(self.impact_score)
+		self.impact_scored_on = now_datetime()
+		self.impact_scored_by = frappe.session.user
+
+		if self.name:
+			self._persist_impact_score()
+
+	def _persist_impact_score(self):
+		self.db_set("impact_score", self.impact_score, update_modified=False)
+		self.db_set("impact_band", self.impact_band, update_modified=False)
+		self.db_set("impact_scored_on", self.impact_scored_on, update_modified=False)
+		self.db_set("impact_scored_by", self.impact_scored_by, update_modified=False)
 
 	def _validate_iks_guardrails(self):
 		if not cint(self.iks_sensitive):

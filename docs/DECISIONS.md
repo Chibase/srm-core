@@ -59,3 +59,12 @@ Copy this block for each new decision:
 - **Consequences:** Users can capture consistent impact lines per incident now; scoring can layer on without schema churn later.
 - **Alternatives considered:** Standalone assessment DocType with dashboard links only (more clicks, weaker form UX); hard-coded severity dimensions (inflexible).
 
+### ADR-005: Weighted normalization and quartile impact bands
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 06 requires a deterministic composite impact score from heterogeneous taxonomy rows with different weights and ordinal severities.
+- **Decision:** Compute `normalized_score_0_100 = (Σ(severity×weight) / (Σ(weight)×5)) × 100`, round to 2 decimals, and map bands at quartile thresholds (Low <25, Moderate <50, High <75, Critical ≥75).
+- **Consequences:** Scores stay comparable across incidents with different taxonomy mixes; band cutoffs are simple to explain pending calibration with stakeholders.
+- **Alternatives considered:** Simple average of severities (ignores taxonomy weights); fixed weighted sum without normalization (unbounded scale).
+

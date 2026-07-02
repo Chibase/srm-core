@@ -29,6 +29,11 @@
   "sla_breached",
   "section_break_impact",
   "impact_assessments",
+  "impact_score",
+  "impact_band",
+  "column_break_impact_score",
+  "impact_scored_on",
+  "impact_scored_by",
   "section_break_resolution",
   "resolution_summary",
   "closed_on"
@@ -179,6 +184,40 @@
    "fieldtype": "Table",
    "label": "Impact Assessments",
    "options": "SRM Impact Assessment"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "impact_score",
+   "fieldtype": "Float",
+   "label": "Impact Score",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "impact_band",
+   "fieldtype": "Select",
+   "label": "Impact Band",
+   "options": "Low\nModerate\nHigh\nCritical",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_impact_score",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "impact_scored_on",
+   "fieldtype": "Datetime",
+   "label": "Impact Scored On",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "impact_scored_by",
+   "fieldtype": "Link",
+   "label": "Impact Scored By",
+   "options": "User",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_resolution",
