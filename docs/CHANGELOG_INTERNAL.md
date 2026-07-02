@@ -379,3 +379,36 @@ Copy this block for each completed packet:
 - Timeline UI page deferred to later packet.
 - REST endpoint wrapper for `get_incident_timeline()` deferred.
 
+---
+
+## Packet 11 — Notification Rules Engine (2026-07-02)
+
+**Commit:** `2d51c9b`
+
+### Summary
+- Added standalone DocType `SRM Notification` with queued/sent/failed lifecycle, idempotency keys, and in-app read tracking.
+- Created `srm_core/services/notifications.py` with rule evaluation, queueing, stub dispatch, and read helpers.
+- Initial rules: escalation L2/L3, SLA due within 6h, status Closed, priority P1-Critical.
+- Hooked notification processing into timeline `emit_incident_event()` after each new event.
+- Idempotent bootstrap patch for recent P1/P2 open incidents.
+- Added `test_notifications.py` (10 tests; 75 total across app).
+
+### Files changed
+- `srm_core/services/notifications.py` (new)
+- `srm_core/services/permissions.py` (updated)
+- `srm_core/services/timeline.py` (updated)
+- `srm_core/srm_core/doctype/srm_notification/` (new)
+- `srm_core/srm_core/tests/test_notifications.py` (new)
+- `srm_core/patches/v1_0/backfill_high_priority_notifications.py` (new)
+- `srm_core/patches.txt` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Real SMTP/provider integration deferred; stub dispatch marks email sent when address exists.
+- Notification desk UI deferred to later packet.
+

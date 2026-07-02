@@ -162,6 +162,9 @@ def emit_incident_event(
 		)
 	)
 	event_doc.insert(ignore_permissions=True)
+	from srm_core.services.notifications import process_notifications_for_event
+
+	process_notifications_for_event(event_doc)
 	return event_doc
 
 

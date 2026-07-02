@@ -9,3 +9,4 @@ srm_core.patches.v1_0.seed_default_impact_taxonomy
 srm_core.patches.v1_0.backfill_incident_priority_sla
 srm_core.patches.v1_0.backfill_incident_escalation
 srm_core.patches.v1_0.backfill_incident_timeline
+srm_core.patches.v1_0.backfill_high_priority_notifications

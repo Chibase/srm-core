@@ -4,6 +4,8 @@ import frappe
 
 IKS_PRIVILEGED_ROLES = frozenset({"SRM Admin", "System Manager"})
 
+NOTIFICATION_PRIVILEGED_ROLES = frozenset({"SRM Admin", "SRM Lead", "System Manager"})
+
 SRM_ROLES = (
 	"SRM Admin",
 	"SRM Case Manager",
@@ -21,6 +23,11 @@ def user_has_iks_privileged_role(user=None):
 def user_has_system_manager_role(user=None):
 	user = user or frappe.session.user
 	return "System Manager" in frappe.get_roles(user)
+
+
+def user_has_notification_privileged_role(user=None):
+	user = user or frappe.session.user
+	return bool(set(frappe.get_roles(user)) & NOTIFICATION_PRIVILEGED_ROLES)
 
 
 def ensure_srm_roles():

@@ -104,3 +104,12 @@ Copy this block for each new decision:
 - **Consequences:** Timeline is query-friendly and safe to backfill; event volume stays bounded on repeated saves.
 - **Alternatives considered:** Embedded JSON log on Incident (harder to query); Comment doctype reuse (weak structure and permissions).
 
+### ADR-010: Notification idempotency and stub dispatch strategy
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 11 needs actionable alerts from timeline events without external brokers or SMTP dependencies in tests.
+- **Decision:** Evaluate deterministic rules per `SRM Incident Event`, persist `SRM Notification` rows with SHA256 idempotency keys (`incident+event+recipient+channel+rule`), and dispatch via stub: in-app marks `sent` immediately; email marks `sent` when recipient has email else `failed`. Hook evaluation immediately after timeline event insert.
+- **Consequences:** No duplicate notifications on replay; real email provider can replace stub later without changing rule logic.
+- **Alternatives considered:** Direct email send on event emit (no audit trail); external queue service (operational overhead).
+
