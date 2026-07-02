@@ -8,6 +8,7 @@ from frappe.utils import cint, flt, get_datetime, now_datetime
 
 from srm_core.services.attachments import diff_incident_attachments
 from srm_core.services.comments import diff_incident_comments, parse_mention_users_field
+from srm_core.services.risk_rollup import linked_risk_changed, residual_risk_materially_changed
 
 EVENT_INCIDENT_CREATED = "INCIDENT_CREATED"
 EVENT_STATUS_CHANGED = "STATUS_CHANGED"
@@ -20,6 +21,8 @@ EVENT_TASK_STATUS_CHANGED = "TASK_STATUS_CHANGED"
 EVENT_COMMENT_ADDED = "COMMENT_ADDED"
 EVENT_ATTACHMENT_ADDED = "ATTACHMENT_ADDED"
 EVENT_ATTACHMENT_REMOVED = "ATTACHMENT_REMOVED"
+EVENT_RISK_LINKED = "RISK_LINKED"
+EVENT_RESIDUAL_RISK_UPDATED = "RESIDUAL_RISK_UPDATED"
 
 VALID_EVENT_TYPES = frozenset(
 	{
@@ -34,6 +37,8 @@ VALID_EVENT_TYPES = frozenset(
 		EVENT_COMMENT_ADDED,
 		EVENT_ATTACHMENT_ADDED,
 		EVENT_ATTACHMENT_REMOVED,
+		EVENT_RISK_LINKED,
+		EVENT_RESIDUAL_RISK_UPDATED,
 	}
 )
 
@@ -410,5 +415,42 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 			actor=actor,
 			event_time=event_time,
 			idempotency_key=make_idempotency_key(doc.name, EVENT_ATTACHMENT_REMOVED, snapshot),
+		)
+
+	if is_insert or linked_risk_changed(previous, doc):
+		snapshot = {
+			"linked_risk": doc.linked_risk,
+			"risk_linked_on": str(get_datetime(doc.risk_linked_on)) if doc.risk_linked_on else None,
+			"risk_linked_by": doc.risk_linked_by,
+		}
+		emit_incident_event(
+			incident=doc.name,
+			event_type=EVENT_RISK_LINKED,
+			summary=f"Risk linked: {doc.linked_risk}",
+			details=snapshot,
+			actor=actor,
+			event_time=event_time,
+			idempotency_key=make_idempotency_key(doc.name, EVENT_RISK_LINKED, snapshot),
+		)
+
+	if doc.linked_risk and (is_insert or residual_risk_materially_changed(previous, doc)):
+		snapshot = {
+			"linked_risk": doc.linked_risk,
+			"residual_risk_score": flt(doc.residual_risk_score),
+			"residual_risk_band": doc.residual_risk_band,
+			"previous_score": flt(getattr(previous, "residual_risk_score", 0)) if previous else None,
+			"previous_band": getattr(previous, "residual_risk_band", None) if previous else None,
+		}
+		emit_incident_event(
+			incident=doc.name,
+			event_type=EVENT_RESIDUAL_RISK_UPDATED,
+			summary=(
+				f"Residual risk updated: {doc.residual_risk_score} ({doc.residual_risk_band})"
+			),
+			details=snapshot,
+			actor=actor,
+			event_time=event_time,
+			idempotency_key=make_idempotency_key(doc.name, EVENT_RESIDUAL_RISK_UPDATED, snapshot),
+			severity=SEVERITY_CRITICAL if doc.residual_risk_band == "Critical" else SEVERITY_INFO,
 		)
 

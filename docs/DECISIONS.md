@@ -131,3 +131,12 @@ Copy this block for each new decision:
 - **Consequences:** Evidence history remains auditable after removal; primary evidence designation stays unambiguous; closed incidents stay tamper-resistant for standard roles.
 - **Alternatives considered:** Hard delete (destroys audit trail); multiple primary evidence rows (ambiguous for investigations).
 
+### ADR-013: Residual risk formula and Critical close-gate policy
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 14 requires linking incidents to the risk register and computing deterministic residual risk for closure governance without redesigning the risk register DocType.
+- **Decision:** Compute residual risk on incident validate when `linked_risk` is set using weighted components (impact 35%, priority 35%, escalation 20%, task-completion penalty 10%); stamp link metadata on set/change; clear residual fields when unlinked while retaining link audit stamps; block non–System Manager closure when linked residual band is Critical; emit `RISK_LINKED` and `RESIDUAL_RISK_UPDATED` timeline events; notify owner and SRM Lead on link, and owner/SRM Lead/SRM Admin when residual band is Critical.
+- **Consequences:** Closure decisions account for unresolved mitigation on linked risks; formula is transparent and unit-testable; risk register receives best-effort incident reference notes without blocking incident saves.
+- **Alternatives considered:** Manual residual entry (inconsistent); hard block all linked closures regardless of band (too restrictive).
+

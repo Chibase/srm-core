@@ -57,3 +57,22 @@ def ensure_high_priority_assignment(doc, assignee="Administrator", task_title="R
 			},
 		)
 	return doc
+
+
+def ensure_risk_register(name="Operational Risk", **overrides):
+	if frappe.db.exists("SRM Risk Register", name):
+		doc = frappe.get_doc("SRM Risk Register", name)
+		for key, value in overrides.items():
+			setattr(doc, key, value)
+		if overrides:
+			doc.save(ignore_permissions=True)
+		return name
+
+	data = {
+		"doctype": "SRM Risk Register",
+		"risk_title": name,
+		"risk_status": "Open",
+	}
+	data.update(overrides)
+	frappe.get_doc(data).insert(ignore_permissions=True)
+	return name

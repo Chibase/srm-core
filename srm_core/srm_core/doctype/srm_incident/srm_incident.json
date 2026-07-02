@@ -56,6 +56,14 @@
   "comments",
   "section_break_attachments",
   "attachments",
+  "section_break_risk",
+  "linked_risk",
+  "column_break_risk",
+  "risk_linked_on",
+  "risk_linked_by",
+  "residual_risk_score",
+  "residual_risk_band",
+  "residual_risk_rationale",
   "section_break_resolution",
   "resolution_summary",
   "closed_on"
@@ -390,6 +398,60 @@
    "fieldtype": "Table",
    "label": "Attachments",
    "options": "SRM Incident Attachment"
+  },
+  {
+   "fieldname": "section_break_risk",
+   "fieldtype": "Section Break",
+   "label": "Risk Register"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "linked_risk",
+   "fieldtype": "Link",
+   "label": "Linked Risk",
+   "options": "SRM Risk Register",
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_risk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "risk_linked_on",
+   "fieldtype": "Datetime",
+   "label": "Risk Linked On",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "risk_linked_by",
+   "fieldtype": "Link",
+   "label": "Risk Linked By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "residual_risk_score",
+   "fieldtype": "Float",
+   "label": "Residual Risk Score",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "residual_risk_band",
+   "fieldtype": "Select",
+   "label": "Residual Risk Band",
+   "options": "Low\nModerate\nHigh\nCritical",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "residual_risk_rationale",
+   "fieldtype": "Small Text",
+   "label": "Residual Risk Rationale",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_resolution",

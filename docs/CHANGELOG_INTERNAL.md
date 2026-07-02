@@ -477,3 +477,39 @@ Copy this block for each completed packet:
 - Binary hash population from File content deferred (helper accepts bytes when available).
 - External object storage integration deferred.
 
+---
+
+## Packet 14 — Risk Register Auto-Linking + Residual Risk Rollup (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added minimal `SRM Risk Register` DocType (link target only; no redesign) with `incident_references` touchpoint field.
+- Added incident risk link fields (`linked_risk`, link audit stamps, residual score/band/rationale).
+- Created `srm_core/services/risk_rollup.py` with deterministic residual scoring, close-gate validation, and best-effort risk register reference updates.
+- Extended timeline with `RISK_LINKED` / `RESIDUAL_RISK_UPDATED` events and notification rules `risk_linked` / `residual_risk_critical`.
+- Added idempotent backfill patch for incidents with existing `linked_risk` and `test_risk_rollup.py` (14 tests; 110 total across app).
+
+### Files changed
+- `srm_core/services/risk_rollup.py` (new)
+- `srm_core/services/timeline.py` (updated)
+- `srm_core/services/notifications.py` (updated)
+- `srm_core/srm_core/doctype/srm_risk_register/` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident_event/srm_incident_event.json` (updated)
+- `srm_core/patches/v1_0/backfill_incident_residual_risk.py` (new)
+- `srm_core/patches.txt` (updated)
+- `srm_core/srm_core/tests/test_risk_rollup.py` (new)
+- `srm_core/srm_core/tests/test_helpers.py` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Risk register UI/workflow expansion deferred; current DocType is minimal link target.
+- Residual recompute on every validate when linked; batch recompute job deferred.
+

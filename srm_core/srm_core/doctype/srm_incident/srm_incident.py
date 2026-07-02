@@ -26,6 +26,12 @@ from srm_core.services.investigation_tasks import (
 	get_blocking_tasks,
 	validate_investigation_task_rows,
 )
+from srm_core.services.risk_rollup import (
+	apply_incident_risk_linkage,
+	linked_risk_changed,
+	touch_risk_register_with_incident,
+	validate_residual_risk_close_gate,
+)
 from srm_core.services.permissions import user_has_iks_privileged_role, user_has_system_manager_role
 from srm_core.services.priority import (
 	compute_priority_score,
@@ -81,9 +87,22 @@ class SRMIncident(Document):
 
 	def after_insert(self):
 		self._emit_timeline_events(is_insert=True)
+		if self.linked_risk:
+			touch_risk_register_with_incident(
+				self.linked_risk,
+				self.name,
+				self.incident_title,
+			)
 
 	def on_update(self):
+		previous = self.get_doc_before_save()
 		self._emit_timeline_events(is_insert=False)
+		if linked_risk_changed(previous, self):
+			touch_risk_register_with_incident(
+				self.linked_risk,
+				self.name,
+				self.incident_title,
+			)
 
 	def _run_incident_validations(self):
 		validate_geographic_area_link(self)
@@ -133,6 +152,8 @@ class SRMIncident(Document):
 			self.incident_owner,
 			self.investigation_tasks,
 		)
+		apply_incident_risk_linkage(self, previous)
+		validate_residual_risk_close_gate(self, previous)
 
 		if self.name and not self.is_new() and self.docstatus == 1:
 			self._persist_computed_fields()

@@ -17,6 +17,8 @@ from srm_core.services.timeline import (
 	EVENT_COMMENT_ADDED,
 	EVENT_ESCALATION_CHANGED,
 	EVENT_PRIORITY_COMPUTED,
+	EVENT_RESIDUAL_RISK_UPDATED,
+	EVENT_RISK_LINKED,
 	EVENT_SLA_UPDATED,
 	EVENT_STATUS_CHANGED,
 )
@@ -37,6 +39,8 @@ RULE_PRIORITY_P1 = "priority_p1"
 RULE_BOOTSTRAP_HIGH_PRIORITY = "bootstrap_high_priority"
 RULE_COMMENT_MENTION = "comment_mention"
 RULE_SENSITIVE_EVIDENCE_ADDED = "sensitive_evidence_added"
+RULE_RISK_LINKED = "risk_linked"
+RULE_RESIDUAL_RISK_CRITICAL = "residual_risk_critical"
 
 ESCALATION_NOTIFY_LEVELS = frozenset({"L2", "L3"})
 SLA_WARNING_HOURS = 6
@@ -245,6 +249,46 @@ def evaluate_incident_event_for_notifications(event_doc):
 					subject,
 					message,
 					RULE_SENSITIVE_EVIDENCE_ADDED,
+				)
+
+	elif event_type == EVENT_RISK_LINKED:
+		subject = f"Risk register linked: {incident.incident_title}"
+		message = event_doc.summary
+		recipients = set()
+		if incident.incident_owner:
+			recipients.add(incident.incident_owner)
+		recipients.update(get_users_with_role("SRM Lead"))
+		for recipient in recipients:
+			add_recipient_intents(
+				intents,
+				seen,
+				incident_name,
+				event_doc.name,
+				recipient,
+				subject,
+				message,
+				RULE_RISK_LINKED,
+			)
+
+	elif event_type == EVENT_RESIDUAL_RISK_UPDATED:
+		if details.get("residual_risk_band") == "Critical":
+			subject = f"Critical residual risk: {incident.incident_title}"
+			message = event_doc.summary
+			recipients = set()
+			if incident.incident_owner:
+				recipients.add(incident.incident_owner)
+			recipients.update(get_users_with_role("SRM Lead"))
+			recipients.update(get_users_with_role("SRM Admin"))
+			for recipient in recipients:
+				add_recipient_intents(
+					intents,
+					seen,
+					incident_name,
+					event_doc.name,
+					recipient,
+					subject,
+					message,
+					RULE_RESIDUAL_RISK_CRITICAL,
 				)
 
 	return intents
