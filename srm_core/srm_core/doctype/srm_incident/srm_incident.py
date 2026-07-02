@@ -4,7 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_to_date, cint, get_datetime, now_datetime
+from frappe.utils import add_to_date, cint, flt, get_datetime, now_datetime
 
 from srm_core.services.geographic_area import validate_geographic_area_link
 from srm_core.services.impact import (
@@ -13,6 +13,12 @@ from srm_core.services.impact import (
 	validate_impact_assessment_rows,
 )
 from srm_core.services.permissions import user_has_iks_privileged_role
+from srm_core.services.priority import (
+	compute_priority_score,
+	priority_band,
+	resolve_sentiment_signal,
+	sla_hours_for_priority,
+)
 from srm_core.services.statuses import (
 	INCIDENT_CLOSED,
 	INCIDENT_DRAFT,
@@ -34,9 +40,11 @@ class SRMIncident(Document):
 			self.status = INCIDENT_OPEN
 			self.db_set("status", INCIDENT_OPEN)
 
-		if not self.sla_due_date:
+		if not self.sla_due_date and not self.sla_due_by:
 			self.sla_due_date = add_to_date(now_datetime(), hours=72)
+			self.sla_due_by = self.sla_due_date
 			self.db_set("sla_due_date", self.sla_due_date)
+			self.db_set("sla_due_by", self.sla_due_by)
 
 		self._persist_computed_fields()
 
@@ -44,6 +52,7 @@ class SRMIncident(Document):
 		validate_geographic_area_link(self)
 		validate_impact_assessment_rows(self.impact_assessments)
 		self._apply_impact_scoring()
+		self._apply_priority_and_sla()
 
 		if cint(self.iks_sensitive) and not cint(self.consent_obtained):
 			frappe.throw(_("Consent must be obtained for IKS-sensitive incidents."))
@@ -63,8 +72,8 @@ class SRMIncident(Document):
 
 		self.sla_breached = cint(
 			bool(
-				self.sla_due_date
-				and now_datetime() > get_datetime(self.sla_due_date)
+				(self.sla_due_by or self.sla_due_date)
+				and now_datetime() > get_datetime(self.sla_due_by or self.sla_due_date)
 				and self.status not in INCIDENT_TERMINAL_STATUSES
 			)
 		)
@@ -90,6 +99,45 @@ class SRMIncident(Document):
 		self.db_set("impact_band", self.impact_band, update_modified=False)
 		self.db_set("impact_scored_on", self.impact_scored_on, update_modified=False)
 		self.db_set("impact_scored_by", self.impact_scored_by, update_modified=False)
+
+	def _apply_priority_and_sla(self):
+		previous = self.get_doc_before_save()
+		previous_level = previous.priority_level if previous else None
+
+		sentiment_signal = resolve_sentiment_signal(
+			self.name,
+			self.geographic_area,
+			reference_datetime=self.creation or now_datetime(),
+		)
+		self.priority_score = compute_priority_score(flt(self.impact_score), sentiment_signal)
+		self.priority_level = priority_band(self.priority_score)
+		self.priority_computed_on = now_datetime()
+		self.priority_computed_by = frappe.session.user
+
+		if self.status != INCIDENT_CLOSED:
+			self.sla_target_hours = sla_hours_for_priority(self.priority_level)
+			sla_hours = self.sla_target_hours
+			base = get_datetime(self.creation or now_datetime())
+
+			if not self.sla_due_by:
+				self.sla_due_by = add_to_date(base, hours=sla_hours)
+			elif previous_level and previous_level != self.priority_level:
+				self.sla_due_by = add_to_date(now_datetime(), hours=sla_hours)
+
+			self.sla_due_date = self.sla_due_by
+
+		if self.name:
+			self._persist_priority_and_sla()
+
+	def _persist_priority_and_sla(self):
+		self.db_set("priority_score", self.priority_score, update_modified=False)
+		self.db_set("priority_level", self.priority_level, update_modified=False)
+		self.db_set("priority_computed_on", self.priority_computed_on, update_modified=False)
+		self.db_set("priority_computed_by", self.priority_computed_by, update_modified=False)
+		if self.status != INCIDENT_CLOSED:
+			self.db_set("sla_target_hours", self.sla_target_hours, update_modified=False)
+			self.db_set("sla_due_by", self.sla_due_by, update_modified=False)
+			self.db_set("sla_due_date", self.sla_due_date, update_modified=False)
 
 	def _validate_iks_guardrails(self):
 		if not cint(self.iks_sensitive):
@@ -131,3 +179,4 @@ class SRMIncident(Document):
 	def _persist_computed_fields(self):
 		self.db_set("sla_breached", self.sla_breached, update_modified=False)
 		self.db_set("closed_on", self.closed_on, update_modified=False)
+		self._persist_priority_and_sla()

@@ -66,8 +66,11 @@ class TestLifecycleWorkflow(FrappeTestCase):
 
 	def test_incident_sla_breached_when_overdue_and_unresolved(self):
 		doc = self._make_incident(status="Open")
-		doc.sla_due_date = add_to_date(now_datetime(), hours=-1)
 		doc.insert()
+		overdue = add_to_date(now_datetime(), hours=-1)
+		doc.sla_due_date = overdue
+		doc.sla_due_by = overdue
+		doc.save()
 		doc.submit()
 		doc.reload()
 		self.assertEqual(doc.sla_breached, 1)

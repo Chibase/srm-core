@@ -25,6 +25,13 @@
   "last_sensitive_action_by",
   "last_sensitive_action_on",
   "section_break_sla",
+  "priority_score",
+  "priority_level",
+  "column_break_priority",
+  "priority_computed_on",
+  "priority_computed_by",
+  "sla_target_hours",
+  "sla_due_by",
   "sla_due_date",
   "sla_breached",
   "section_break_impact",
@@ -158,12 +165,63 @@
   {
    "fieldname": "section_break_sla",
    "fieldtype": "Section Break",
-   "label": "SLA"
+   "label": "Priority & SLA"
   },
   {
+   "allow_on_submit": 1,
+   "fieldname": "priority_score",
+   "fieldtype": "Float",
+   "label": "Priority Score",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "priority_level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Priority Level",
+   "options": "P4-Low\nP3-Medium\nP2-High\nP1-Critical",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_priority",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "priority_computed_on",
+   "fieldtype": "Datetime",
+   "label": "Priority Computed On",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "priority_computed_by",
+   "fieldtype": "Link",
+   "label": "Priority Computed By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "sla_target_hours",
+   "fieldtype": "Float",
+   "label": "SLA Target Hours",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "sla_due_by",
+   "fieldtype": "Datetime",
+   "label": "SLA Due By",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
    "fieldname": "sla_due_date",
    "fieldtype": "Datetime",
-   "label": "SLA Due Date"
+   "label": "SLA Due Date",
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,

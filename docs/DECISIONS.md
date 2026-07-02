@@ -68,3 +68,12 @@ Copy this block for each new decision:
 - **Consequences:** Scores stay comparable across incidents with different taxonomy mixes; band cutoffs are simple to explain pending calibration with stakeholders.
 - **Alternatives considered:** Simple average of severities (ignores taxonomy weights); fixed weighted sum without normalization (unbounded scale).
 
+### ADR-006: Impact-sentiment priority blend and SLA recompute policy
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 07 needs a deterministic incident priority derived from impact score (Packet 06) plus community sentiment, with auto SLA targets tied to priority bands.
+- **Decision:** Compute `priority_score = min(100, round(impact_score×0.70 + sentiment_contrib, 2))` where `sentiment_contrib = (abs(clamp(sentiment_score,-100..100))/100)×30`. Map P4–P1 at the same quartile cutoffs as impact bands. Resolve sentiment via `SRM Sentiment Capture.linked_incident` when present; otherwise latest capture in the same `geographic_area` within 30 days of incident creation (fallback). Set `sla_due_by` from incident `creation` on first compute; when `priority_level` changes before closure, recompute from current timestamp; freeze `sla_due_by` once status is Closed. Mirror `sla_due_by` to legacy `sla_due_date` for breach checks.
+- **Consequences:** Priority and SLA stay explainable and testable; sentiment linkage quality affects accuracy until direct links are populated.
+- **Alternatives considered:** Equal 50/50 impact/sentiment weighting; never recomputing SLA after create (stale targets after escalation).
+

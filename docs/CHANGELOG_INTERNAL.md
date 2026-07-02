@@ -251,3 +251,36 @@ Copy this block for each completed packet:
 - Dashboard/charts for impact trends deferred to later packet.
 - Band thresholds may be recalibrated after stakeholder review.
 
+---
+
+## Packet 07 — Incident Priority Engine + Auto-SLA Targeting (2026-07-02)
+
+**Commit:** `8ff75be`
+
+### Summary
+- Added read-only priority fields on SRM Incident: `priority_score`, `priority_level`, `priority_computed_on`, `priority_computed_by`.
+- Added SLA targeting fields: `sla_target_hours`, `sla_due_by` (synced to `sla_due_date` for breach logic).
+- Created `srm_core/services/priority.py` with deterministic 70/30 impact/sentiment blend and quartile P4–P1 bands.
+- Sentiment resolution prefers `linked_incident`; falls back to same geographic area within 30 days.
+- SLA due from creation on first compute; recomputes from now when priority changes pre-closure; frozen when Closed.
+- Idempotent backfill patch for existing incidents.
+- Added `test_priority_engine.py` (6 tests; 37 total across app).
+
+### Files changed
+- `srm_core/services/priority.py` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_priority_engine.py` (new)
+- `srm_core/patches/v1_0/backfill_incident_priority_sla.py` (new)
+- `srm_core/patches.txt` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Sentiment fallback window (30 days) may be tuned after operational review.
+- Dashboard priority/SLA views deferred to later packet.
+
