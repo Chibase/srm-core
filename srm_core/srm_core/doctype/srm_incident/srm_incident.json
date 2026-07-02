@@ -54,6 +54,8 @@
   "investigation_tasks",
   "section_break_comments",
   "comments",
+  "section_break_attachments",
+  "attachments",
   "section_break_resolution",
   "resolution_summary",
   "closed_on"
@@ -376,6 +378,18 @@
    "fieldtype": "Table",
    "label": "Comments",
    "options": "SRM Incident Comment"
+  },
+  {
+   "fieldname": "section_break_attachments",
+   "fieldtype": "Section Break",
+   "label": "Attachments"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "attachments",
+   "fieldtype": "Table",
+   "label": "Attachments",
+   "options": "SRM Incident Attachment"
   },
   {
    "fieldname": "section_break_resolution",

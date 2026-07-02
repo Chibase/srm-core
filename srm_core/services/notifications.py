@@ -7,11 +7,13 @@ import frappe
 from frappe import _
 from frappe.utils import add_to_date, get_datetime, now_datetime
 
+from srm_core.services.attachments import SENSITIVE_CLASSIFICATIONS
 from srm_core.services.investigation_tasks import BLOCKING_TASK_STATUSES
 from srm_core.services.permissions import user_has_notification_privileged_role
 from srm_core.services.priority import PRIORITY_P1_CRITICAL
 from srm_core.services.statuses import INCIDENT_CLOSED
 from srm_core.services.timeline import (
+	EVENT_ATTACHMENT_ADDED,
 	EVENT_COMMENT_ADDED,
 	EVENT_ESCALATION_CHANGED,
 	EVENT_PRIORITY_COMPUTED,
@@ -34,6 +36,7 @@ RULE_STATUS_CLOSED = "status_closed"
 RULE_PRIORITY_P1 = "priority_p1"
 RULE_BOOTSTRAP_HIGH_PRIORITY = "bootstrap_high_priority"
 RULE_COMMENT_MENTION = "comment_mention"
+RULE_SENSITIVE_EVIDENCE_ADDED = "sensitive_evidence_added"
 
 ESCALATION_NOTIFY_LEVELS = frozenset({"L2", "L3"})
 SLA_WARNING_HOURS = 6
@@ -222,6 +225,27 @@ def evaluate_incident_event_for_notifications(event_doc):
 				message,
 				RULE_COMMENT_MENTION,
 			)
+
+	elif event_type == EVENT_ATTACHMENT_ADDED:
+		classification = (details.get("classification") or "").lower()
+		if classification in SENSITIVE_CLASSIFICATIONS:
+			subject = f"Sensitive evidence added: {incident.incident_title}"
+			message = event_doc.summary
+			recipients = set()
+			if incident.incident_owner:
+				recipients.add(incident.incident_owner)
+			recipients.update(get_users_with_role("SRM Lead"))
+			for recipient in recipients:
+				add_recipient_intents(
+					intents,
+					seen,
+					incident_name,
+					event_doc.name,
+					recipient,
+					subject,
+					message,
+					RULE_SENSITIVE_EVIDENCE_ADDED,
+				)
 
 	return intents
 

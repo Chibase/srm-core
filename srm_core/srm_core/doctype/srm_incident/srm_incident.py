@@ -14,6 +14,7 @@ from srm_core.services.escalation import (
 	validate_high_priority_assignment,
 )
 from srm_core.services.geographic_area import validate_geographic_area_link
+from srm_core.services.attachments import validate_incident_attachment_rows
 from srm_core.services.comments import validate_incident_comment_rows
 from srm_core.services.impact import (
 	compute_weighted_score,
@@ -92,6 +93,11 @@ class SRMIncident(Document):
 		validate_incident_comment_rows(
 			self.comments,
 			previous.comments if previous else None,
+		)
+		validate_incident_attachment_rows(
+			self.attachments,
+			previous.attachments if previous else None,
+			incident_status=self.status,
 		)
 		self._apply_impact_scoring()
 		self._apply_priority_and_sla()

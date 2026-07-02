@@ -122,3 +122,12 @@ Copy this block for each new decision:
 - **Consequences:** Simple authoring UX without rich text; mention storage is query-friendly and deterministic for idempotency keys.
 - **Alternatives considered:** JSON array in `mention_users` (harder to scan in desk); notify comment author on every comment (noise).
 
+### ADR-012: Soft-delete evidence policy and single primary evidence rule
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 13 requires structured incident attachments with classification, integrity metadata, and lifecycle controls without external object storage.
+- **Decision:** Store attachments as child-table rows with soft removal (`is_removed`, reason, audit stamps); allow restore only for System Manager; enforce one active `is_primary_evidence` row; block non-System Manager add/remove on Closed incidents; emit `ATTACHMENT_ADDED`/`ATTACHMENT_REMOVED` timeline events; notify incident owner and SRM Lead when confidential/restricted evidence is added.
+- **Consequences:** Evidence history remains auditable after removal; primary evidence designation stays unambiguous; closed incidents stay tamper-resistant for standard roles.
+- **Alternatives considered:** Hard delete (destroys audit trail); multiple primary evidence rows (ambiguous for investigations).
+

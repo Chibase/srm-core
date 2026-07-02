@@ -444,3 +444,36 @@ Copy this block for each completed packet:
 - Rich-text editor deferred; plain text only.
 - Comment edit does not re-notify newly added mentions (add-only fan-out).
 
+---
+
+## Packet 13 — Incident Attachment Registry + Evidence Controls (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added child-table DocType `SRM Incident Attachment` with classification, integrity hash, primary flag, and soft-remove audit fields.
+- Added `attachments` table on SRM Incident with validation, single active primary evidence rule, and closed-incident guardrails.
+- Created `srm_core/services/attachments.py` with integrity hash helper and read API.
+- Extended timeline with `ATTACHMENT_ADDED` / `ATTACHMENT_REMOVED` events and `sensitive_evidence_added` notifications for confidential/restricted uploads.
+- Added `test_incident_attachments.py` (11 tests; 96 total across app).
+
+### Files changed
+- `srm_core/services/attachments.py` (new)
+- `srm_core/services/timeline.py` (updated)
+- `srm_core/services/notifications.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident_attachment/` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident_event/srm_incident_event.json` (updated)
+- `srm_core/srm_core/tests/test_incident_attachments.py` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Binary hash population from File content deferred (helper accepts bytes when available).
+- External object storage integration deferred.
+
