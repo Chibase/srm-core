@@ -187,3 +187,38 @@ Copy this block for each completed packet:
 - Legacy `geographic_area_text` planned for removal in a future packet (see ADR-003).
 - Patch logs created/linked counts to `srm_core` logger on migrate.
 
+---
+
+## Packet 05 — Impact Taxonomy + SRM Impact Assessment (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added master DocType `SRM Impact Taxonomy` with categories, weights, and active flag.
+- Added child-table DocType `SRM Impact Assessment` on SRM Incident (`impact_assessments`).
+- Added `srm_core/services/impact.py` helpers (severity ordinal placeholder, duplicate detection, row validation).
+- Added idempotent seed patch for four default taxonomies and `SRM Lead` role.
+- Added `test_impact_assessment.py` (5 tests; 25 total across app).
+
+### Files changed
+- `srm_core/services/impact.py` (new)
+- `srm_core/services/permissions.py` (updated)
+- `srm_core/patches/v1_0/seed_default_impact_taxonomy.py` (new)
+- `srm_core/patches.txt` (updated)
+- `srm_core/srm_core/doctype/srm_impact_taxonomy/` (new)
+- `srm_core/srm_core/doctype/srm_impact_assessment/` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_impact_assessment.py` (new)
+- `srm_core/srm_core/tests/test_helpers.py` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Scoring engine intentionally deferred to Packet 06.
+- Impact assessments use child-table pattern (incident link implicit via parent).
+

@@ -8,6 +8,7 @@ SRM_ROLES = (
 	"SRM Admin",
 	"SRM Case Manager",
 	"SRM Analyst",
+	"SRM Lead",
 	"SRM Viewer",
 )
 

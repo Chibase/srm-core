@@ -27,6 +27,8 @@
   "section_break_sla",
   "sla_due_date",
   "sla_breached",
+  "section_break_impact",
+  "impact_assessments",
   "section_break_resolution",
   "resolution_summary",
   "closed_on"
@@ -165,6 +167,18 @@
    "fieldtype": "Check",
    "label": "SLA Breached",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_impact",
+   "fieldtype": "Section Break",
+   "label": "Impact Assessments"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "impact_assessments",
+   "fieldtype": "Table",
+   "label": "Impact Assessments",
+   "options": "SRM Impact Assessment"
   },
   {
    "fieldname": "section_break_resolution",

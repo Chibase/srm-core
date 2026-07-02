@@ -50,3 +50,12 @@ Copy this block for each new decision:
 - **Consequences:** Safer rollout with backward-compatible data; temporary schema duplication until legacy field removal.
 - **Alternatives considered:** Immediate deletion of text field (risky for unmigrated rows); permanent dual-entry by users (inconsistent data).
 
+### ADR-004: Taxonomy-driven impact model before scoring engine
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Incident impact needs structured, configurable dimensions before a composite risk score can be calculated.
+- **Decision:** Introduce `SRM Impact Taxonomy` master data and embed `SRM Impact Assessment` rows on incidents via a child table; defer scoring math to Packet 06 with ordinal placeholders in `srm_core/services/impact.py`.
+- **Consequences:** Users can capture consistent impact lines per incident now; scoring can layer on without schema churn later.
+- **Alternatives considered:** Standalone assessment DocType with dashboard links only (more clicks, weaker form UX); hard-coded severity dimensions (inflexible).
+

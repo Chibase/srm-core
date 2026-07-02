@@ -5,3 +5,4 @@
 [post_model_sync]
 srm_core.patches.v1_0.create_srm_roles
 srm_core.patches.v1_0.migrate_geographic_area_links
+srm_core.patches.v1_0.seed_default_impact_taxonomy
