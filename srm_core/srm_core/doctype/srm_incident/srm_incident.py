@@ -14,6 +14,7 @@ from srm_core.services.escalation import (
 	validate_high_priority_assignment,
 )
 from srm_core.services.geographic_area import validate_geographic_area_link
+from srm_core.services.comments import validate_incident_comment_rows
 from srm_core.services.impact import (
 	compute_weighted_score,
 	score_to_band,
@@ -85,8 +86,13 @@ class SRMIncident(Document):
 
 	def _run_incident_validations(self):
 		validate_geographic_area_link(self)
+		previous = self.get_doc_before_save()
 		validate_impact_assessment_rows(self.impact_assessments)
 		validate_investigation_task_rows(self.investigation_tasks)
+		validate_incident_comment_rows(
+			self.comments,
+			previous.comments if previous else None,
+		)
 		self._apply_impact_scoring()
 		self._apply_priority_and_sla()
 

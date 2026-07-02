@@ -52,6 +52,8 @@
   "impact_scored_by",
   "section_break_investigation",
   "investigation_tasks",
+  "section_break_comments",
+  "comments",
   "section_break_resolution",
   "resolution_summary",
   "closed_on"
@@ -362,6 +364,18 @@
    "fieldtype": "Table",
    "label": "Investigation Tasks",
    "options": "SRM Investigation Task"
+  },
+  {
+   "fieldname": "section_break_comments",
+   "fieldtype": "Section Break",
+   "label": "Comments"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "comments",
+   "fieldtype": "Table",
+   "label": "Comments",
+   "options": "SRM Incident Comment"
   },
   {
    "fieldname": "section_break_resolution",

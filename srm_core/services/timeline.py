@@ -6,6 +6,8 @@ import json
 import frappe
 from frappe.utils import cint, flt, get_datetime, now_datetime
 
+from srm_core.services.comments import diff_incident_comments, parse_mention_users_field
+
 EVENT_INCIDENT_CREATED = "INCIDENT_CREATED"
 EVENT_STATUS_CHANGED = "STATUS_CHANGED"
 EVENT_IMPACT_SCORED = "IMPACT_SCORED"
@@ -339,5 +341,26 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 			actor=actor,
 			event_time=event_time,
 			idempotency_key=make_idempotency_key(doc.name, EVENT_TASK_STATUS_CHANGED, change),
+		)
+
+	previous_comments = getattr(previous, "comments", None) if previous else []
+	added_comments = diff_incident_comments(previous_comments, doc.comments)
+
+	for comment in added_comments:
+		mentions = parse_mention_users_field(comment.mention_users)
+		snapshot = {
+			"comment_id": comment.name or f"{comment.idx}|{comment.comment_on}",
+			"is_internal": cint(comment.is_internal),
+			"mention_count": len(mentions),
+			"mentioned_users": sorted(mentions),
+		}
+		emit_incident_event(
+			incident=doc.name,
+			event_type=EVENT_COMMENT_ADDED,
+			summary=f"Comment added by {comment.comment_by or actor}",
+			details=snapshot,
+			actor=actor,
+			event_time=event_time,
+			idempotency_key=make_idempotency_key(doc.name, EVENT_COMMENT_ADDED, snapshot),
 		)
 

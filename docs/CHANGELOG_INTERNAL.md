@@ -412,3 +412,35 @@ Copy this block for each completed packet:
 - Real SMTP/provider integration deferred; stub dispatch marks email sent when address exists.
 - Notification desk UI deferred to later packet.
 
+---
+
+## Packet 12 — Incident Commenting + Mention Notifications (2026-07-02)
+
+**Commit:** `4d37b67`
+
+### Summary
+- Added child-table DocType `SRM Incident Comment` with audit stamps, internal flag, and CSV `mention_users`.
+- Added `comments` table on SRM Incident with plain-text `@mention` parsing and validation.
+- Integrated `COMMENT_ADDED` timeline events with structured payload (comment id, internal flag, mention count).
+- Extended notification rules with `comment_mention` fan-out (deduped, no self-notify, unresolved mentions ignored).
+- Added `get_incident_comments()` read helper and `test_incident_comments.py` (10 tests; 85 total across app).
+
+### Files changed
+- `srm_core/services/comments.py` (new)
+- `srm_core/services/timeline.py` (updated)
+- `srm_core/services/notifications.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident_comment/` (new)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/tests/test_incident_comments.py` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Rich-text editor deferred; plain text only.
+- Comment edit does not re-notify newly added mentions (add-only fan-out).
+

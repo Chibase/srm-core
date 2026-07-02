@@ -12,6 +12,7 @@ from srm_core.services.permissions import user_has_notification_privileged_role
 from srm_core.services.priority import PRIORITY_P1_CRITICAL
 from srm_core.services.statuses import INCIDENT_CLOSED
 from srm_core.services.timeline import (
+	EVENT_COMMENT_ADDED,
 	EVENT_ESCALATION_CHANGED,
 	EVENT_PRIORITY_COMPUTED,
 	EVENT_SLA_UPDATED,
@@ -32,6 +33,7 @@ RULE_SLA_DUE_6H = "sla_due_within_6h"
 RULE_STATUS_CLOSED = "status_closed"
 RULE_PRIORITY_P1 = "priority_p1"
 RULE_BOOTSTRAP_HIGH_PRIORITY = "bootstrap_high_priority"
+RULE_COMMENT_MENTION = "comment_mention"
 
 ESCALATION_NOTIFY_LEVELS = frozenset({"L2", "L3"})
 SLA_WARNING_HOURS = 6
@@ -199,6 +201,27 @@ def evaluate_incident_event_for_notifications(event_doc):
 					message,
 					RULE_PRIORITY_P1,
 				)
+
+	elif event_type == EVENT_COMMENT_ADDED:
+		actor = event_doc.actor or frappe.session.user
+		mentioned_users = details.get("mentioned_users") or []
+		subject = f"You were mentioned on {incident.incident_title}"
+		message = event_doc.summary
+		for recipient in mentioned_users:
+			if not recipient or recipient == actor:
+				continue
+			if not frappe.db.exists("User", recipient):
+				continue
+			add_recipient_intents(
+				intents,
+				seen,
+				incident_name,
+				event_doc.name,
+				recipient,
+				subject,
+				message,
+				RULE_COMMENT_MENTION,
+			)
 
 	return intents
 

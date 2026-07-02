@@ -113,3 +113,12 @@ Copy this block for each new decision:
 - **Consequences:** No duplicate notifications on replay; real email provider can replace stub later without changing rule logic.
 - **Alternatives considered:** Direct email send on event emit (no audit trail); external queue service (operational overhead).
 
+### ADR-011: Plain-text @mention format and self-mention suppression
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packet 12 adds incident comments with @mentions that must integrate with timeline events and notification idempotency from Packet 11.
+- **Decision:** Parse plain-text `@username` tokens with regex `@([\w@.-]+)`, resolve to User by name or email, persist normalized mentions as comma-separated usernames in `mention_users`, emit one `COMMENT_ADDED` timeline event per new comment row, and notify mentioned users via `comment_mention` rule on in-app and email channels while suppressing self-mentions and unresolved tokens.
+- **Consequences:** Simple authoring UX without rich text; mention storage is query-friendly and deterministic for idempotency keys.
+- **Alternatives considered:** JSON array in `mention_users` (harder to scan in desk); notify comment author on every comment (noise).
+
