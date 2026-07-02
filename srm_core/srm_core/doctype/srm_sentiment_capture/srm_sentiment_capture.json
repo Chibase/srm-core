@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "capture_date",
+  "geographic_area",
   "geographic_area_text",
   "stakeholder_group",
   "source_type",
@@ -26,11 +27,19 @@
    "reqd": 1
   },
   {
-   "fieldname": "geographic_area_text",
-   "fieldtype": "Data",
+   "fieldname": "geographic_area",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Geographic Area",
+   "options": "Geographic Area",
    "reqd": 1
+  },
+  {
+   "fieldname": "geographic_area_text",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Geographic Area (Legacy Text)",
+   "read_only": 1
   },
   {
    "fieldname": "stakeholder_group",

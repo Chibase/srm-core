@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_to_date, cint, get_datetime, now_datetime
 
+from srm_core.services.geographic_area import validate_geographic_area_link
 from srm_core.services.permissions import user_has_iks_privileged_role
 from srm_core.services.statuses import (
 	INCIDENT_CLOSED,
@@ -35,6 +36,8 @@ class SRMIncident(Document):
 		self._persist_computed_fields()
 
 	def _run_incident_validations(self):
+		validate_geographic_area_link(self)
+
 		if cint(self.iks_sensitive) and not cint(self.consent_obtained):
 			frappe.throw(_("Consent must be obtained for IKS-sensitive incidents."))
 

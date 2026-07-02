@@ -6,6 +6,7 @@ from frappe.tests.utils import FrappeTestCase
 
 from srm_core.services.permissions import ensure_srm_roles
 from srm_core.services.statuses import INCIDENT_CLOSED, INCIDENT_OPEN
+from srm_core.srm_core.tests.test_helpers import ensure_geographic_area
 
 
 class TestIKSPermissions(FrappeTestCase):
@@ -44,12 +45,16 @@ class TestIKSPermissions(FrappeTestCase):
 		return email
 
 	def _make_iks_incident(self, **overrides):
+		area = overrides.pop("geographic_area", None) or ensure_geographic_area(
+			overrides.pop("geographic_area_text", "Ward 12")
+		)
 		data = {
 			"doctype": "SRM Incident",
 			"incident_title": "IKS Test Incident",
 			"incident_date": "2026-07-02",
 			"incident_channel": "Phone",
-			"geographic_area_text": "Ward 12",
+			"geographic_area": area,
+			"geographic_area_text": area,
 			"severity": "Medium",
 			"status": INCIDENT_OPEN,
 			"description": "IKS test description",

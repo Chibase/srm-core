@@ -149,3 +149,41 @@ Copy this block for each completed packet:
 - IKS close guard applies when transitioning to Closed, not on every save while already closed.
 - Role-permission enforcement at desk layer; server-side IKS checks are additive guardrails.
 
+---
+
+## Packet 04 — Geographic Area foundation and linkage migration (2026-07-02)
+
+**Commit:** _(see develop HEAD)_
+
+### Summary
+- Added tree DocType `Geographic Area` with nested-set hierarchy and role permissions.
+- Linked `geographic_area` on SRM Incident and SRM Sentiment Capture; retained hidden legacy `geographic_area_text`.
+- Added idempotent patch to create/backfill Geographic Area links from legacy text.
+- Added server-side validation requiring linked geographic area on Incident/Sentiment.
+- Added `test_geographic_area_migration.py` (6 tests; 20 total across app).
+
+### Files changed
+- `srm_core/srm_core/doctype/geographic_area/` (new)
+- `srm_core/services/geographic_area.py` (new)
+- `srm_core/patches/v1_0/migrate_geographic_area_links.py` (new)
+- `srm_core/patches.txt` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.json` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/doctype/srm_sentiment_capture/srm_sentiment_capture.json` (updated)
+- `srm_core/srm_core/doctype/srm_sentiment_capture/srm_sentiment_capture.py` (updated)
+- `srm_core/srm_core/tests/test_geographic_area_migration.py` (new)
+- `srm_core/srm_core/tests/test_helpers.py` (new)
+- `srm_core/srm_core/tests/test_core_doctypes.py` (updated)
+- `srm_core/srm_core/tests/test_lifecycle_workflow.py` (updated)
+- `srm_core/srm_core/tests/test_iks_permissions.py` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Legacy `geographic_area_text` planned for removal in a future packet (see ADR-003).
+- Patch logs created/linked counts to `srm_core` logger on migrate.
+

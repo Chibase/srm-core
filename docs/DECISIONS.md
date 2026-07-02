@@ -41,3 +41,12 @@ Copy this block for each new decision:
 - **Consequences:** Predictable diffs and changelog; requires discipline to avoid scope creep.
 - **Alternatives considered:** Feature branches per epic without packet numbering; monolithic initial release.
 
+### ADR-003: Retain legacy `geographic_area_text` during Geographic Area migration
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Incident and Sentiment Capture initially stored geography in free-text `geographic_area_text` fields before the Geographic Area master existed.
+- **Decision:** Introduce Link field `geographic_area` (required for new/edited docs), keep `geographic_area_text` hidden and read-only for legacy visibility, and backfill links via idempotent patch. Planned removal of `geographic_area_text` in a future packet after migration verification.
+- **Consequences:** Safer rollout with backward-compatible data; temporary schema duplication until legacy field removal.
+- **Alternatives considered:** Immediate deletion of text field (risky for unmigrated rows); permanent dual-entry by users (inconsistent data).
+

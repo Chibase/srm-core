@@ -9,6 +9,7 @@
   "incident_title",
   "incident_date",
   "incident_channel",
+  "geographic_area",
   "geographic_area_text",
   "column_break_1",
   "programme",
@@ -53,10 +54,19 @@
    "reqd": 1
   },
   {
+   "fieldname": "geographic_area",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Geographic Area",
+   "options": "Geographic Area",
+   "reqd": 1
+  },
+  {
    "fieldname": "geographic_area_text",
    "fieldtype": "Data",
-   "label": "Geographic Area",
-   "reqd": 1
+   "hidden": 1,
+   "label": "Geographic Area (Legacy Text)",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_1",
