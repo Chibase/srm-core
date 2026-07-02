@@ -448,7 +448,7 @@ Copy this block for each completed packet:
 
 ## Packet 13 — Incident Attachment Registry + Evidence Controls (2026-07-02)
 
-**Commit:** _(see develop HEAD)_
+**Commit:** `0fdc3fc`
 
 ### Summary
 - Added child-table DocType `SRM Incident Attachment` with classification, integrity hash, primary flag, and soft-remove audit fields.
