@@ -1,9 +1,8 @@
 import frappe
-from frappe.utils import cint, flt, now_datetime
+from frappe.utils import cint, now_datetime
 
 from srm_core.services.escalation import (
 	ESCALATION_NONE,
-	build_auto_escalation_reason,
 	derive_escalation_level,
 	resolve_escalation_reason,
 )
@@ -22,6 +21,8 @@ def execute():
 			"requires_executive_attention",
 			"sla_breached",
 			"escalation_level",
+			"escalation_reason",
+			"is_escalated",
 		],
 	):
 		requires_exec = cint(row.requires_executive_attention)
@@ -33,17 +34,21 @@ def execute():
 			is_sla_breached,
 		)
 		is_escalated = cint(level != ESCALATION_NONE)
-		reason = (
-			build_auto_escalation_reason(
-				level,
-				row.priority_level or "",
-				is_sla_breached,
-				row.impact_band or "",
-				requires_exec=requires_exec,
-			)
-			if is_escalated
-			else None
+		reason = resolve_escalation_reason(
+			row.escalation_reason,
+			level,
+			row.priority_level or "",
+			is_sla_breached,
+			row.impact_band or "",
+			requires_exec=requires_exec,
 		)
+
+		if (
+			(row.escalation_level or ESCALATION_NONE) == level
+			and cint(row.is_escalated) == is_escalated
+			and (row.escalation_reason or None) == (reason or None)
+		):
+			continue
 
 		values = {
 			"is_escalated": is_escalated,

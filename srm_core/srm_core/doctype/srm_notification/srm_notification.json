@@ -140,6 +140,7 @@
    "fieldname": "idempotency_key",
    "fieldtype": "Data",
    "label": "Idempotency Key",
+   "search_index": 1,
    "unique": 1
   }
  ],

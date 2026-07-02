@@ -513,3 +513,44 @@ Copy this block for each completed packet:
 - Risk register UI/workflow expansion deferred; current DocType is minimal link target.
 - Residual recompute on every validate when linked; batch recompute job deferred.
 
+---
+
+## Packet 15 — Production Hardening + Release Readiness (2026-07-02)
+
+**Commit:** `5eda595`
+
+### Summary
+- Added shared idempotency helpers with graceful unique-conflict handling for timeline events and notifications.
+- Hardened escalation backfill to preserve manual reasons and skip unchanged rows.
+- Added indexed unique constraints reinforcement on event/notification idempotency keys.
+- Added `srm_core/ops/maintenance.py` bench entrypoints (timeline rebuild, notification requeue, residual/priority recompute).
+- Added invariant repair patch and regression/smoke tests (`test_hardening.py`, 10 tests; 120 total).
+- Added operations runbook and release readiness artifact.
+
+### Files changed
+- `srm_core/services/idempotency.py` (new)
+- `srm_core/services/timeline.py` (updated)
+- `srm_core/services/notifications.py` (updated)
+- `srm_core/services/escalation.py` (updated)
+- `srm_core/services/statuses.py` (updated)
+- `srm_core/ops/maintenance.py` (new)
+- `srm_core/patches/v1_0/verify_and_repair_hardening_invariants.py` (new)
+- `srm_core/patches/v1_0/backfill_incident_escalation.py` (updated)
+- `srm_core/patches.txt` (updated)
+- `srm_core/srm_core/doctype/srm_incident/srm_incident.py` (updated)
+- `srm_core/srm_core/doctype/srm_incident_event/srm_incident_event.json` (updated)
+- `srm_core/srm_core/doctype/srm_notification/srm_notification.json` (updated)
+- `srm_core/srm_core/tests/test_hardening.py` (new)
+- `docs/OPERATIONS_RUNBOOK.md` (new)
+- `docs/RELEASE_READINESS_P15.md` (new)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+- `docs/DECISIONS.md` (updated)
+
+### Migration / tests
+- migrate: PASS
+- run-tests: PASS
+
+### Notes / follow-ups
+- Real email provider integration still deferred; notification dispatch remains stubbed.
+- Concurrency stress tests deferred; duplicate protection relies on pre-check + DB unique constraint.
+

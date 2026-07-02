@@ -140,3 +140,12 @@ Copy this block for each new decision:
 - **Consequences:** Closure decisions account for unresolved mitigation on linked risks; formula is transparent and unit-testable; risk register receives best-effort incident reference notes without blocking incident saves.
 - **Alternatives considered:** Manual residual entry (inconsistent); hard block all linked closures regardless of band (too restrictive).
 
+### ADR-014: Production hardening — idempotency defense-in-depth and ops entrypoints
+
+- **Date:** 2026-07-02
+- **Status:** Accepted
+- **Context:** Packets 06–14 introduced timeline events, notifications, escalation, and residual risk flows that must survive repeated saves, migrate reruns, and operational recovery without duplicate rows or data drift.
+- **Decision:** Centralize duplicate detection in `services/idempotency.py`; enforce pre-check + graceful unique-conflict skip for timeline/notification inserts; keep DB `unique` + indexed `idempotency_key` fields; make escalation backfill idempotent and manual-reason aware; add System Manager–gated bench maintenance ops returning summary dicts; ship invariant repair patch for missing keys and blank statuses.
+- **Consequences:** Reruns are safe and observable; ops recovery is scripted; minor race windows still rely on DB uniqueness rather than distributed locks.
+- **Alternatives considered:** Application-level distributed locks (overkill for current scale); deleting duplicate rows on conflict (destructive to audit trail).
+

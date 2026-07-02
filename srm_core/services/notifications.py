@@ -8,6 +8,7 @@ from frappe import _
 from frappe.utils import add_to_date, get_datetime, now_datetime
 
 from srm_core.services.attachments import SENSITIVE_CLASSIFICATIONS
+from srm_core.services.idempotency import get_existing_name_by_idempotency_key, safe_doc_insert
 from srm_core.services.investigation_tasks import BLOCKING_TASK_STATUSES
 from srm_core.services.permissions import user_has_notification_privileged_role
 from srm_core.services.priority import PRIORITY_P1_CRITICAL
@@ -306,7 +307,7 @@ def queue_notifications(intents):
 			intent["channel"],
 			intent["rule_key"],
 		)
-		if frappe.db.exists("SRM Notification", {"idempotency_key": idempotency_key}):
+		if get_existing_name_by_idempotency_key("SRM Notification", idempotency_key):
 			continue
 
 		doc = frappe.get_doc(
@@ -324,8 +325,14 @@ def queue_notifications(intents):
 				"idempotency_key": idempotency_key,
 			}
 		)
-		doc.insert(ignore_permissions=True)
-		queued.append(doc.name)
+		inserted = safe_doc_insert(
+			doc,
+			doctype="SRM Notification",
+			idempotency_key=idempotency_key,
+			context=f"{intent['incident']}|{intent['rule_key']}|{intent['recipient']}",
+		)
+		if inserted:
+			queued.append(inserted.name)
 	return queued
 
 

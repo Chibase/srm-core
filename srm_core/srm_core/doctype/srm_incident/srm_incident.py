@@ -45,6 +45,7 @@ from srm_core.services.statuses import (
 	INCIDENT_OPEN,
 	INCIDENT_RESOLUTION_REQUIRED_STATUSES,
 	INCIDENT_TERMINAL_STATUSES,
+	VALID_INCIDENT_STATUSES,
 )
 from srm_core.services.timeline import (
 	EVENT_STATUS_CHANGED,
@@ -106,6 +107,8 @@ class SRMIncident(Document):
 
 	def _run_incident_validations(self):
 		validate_geographic_area_link(self)
+		if self.status and self.status not in VALID_INCIDENT_STATUSES:
+			frappe.throw(_("Invalid incident status: {0}").format(self.status))
 		previous = self.get_doc_before_save()
 		validate_impact_assessment_rows(self.impact_assessments)
 		validate_investigation_task_rows(self.investigation_tasks)

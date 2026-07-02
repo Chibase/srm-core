@@ -2,6 +2,7 @@
 
 import frappe
 from frappe import _
+from frappe.utils import cint
 
 from srm_core.services.investigation_tasks import (
 	TASK_STATUS_BLOCKED,
@@ -49,6 +50,10 @@ def is_auto_escalation_reason(reason):
 
 def derive_escalation_level(priority_level, impact_band, requires_exec, is_sla_breached):
 	"""Derive escalation level; highest matching rule wins."""
+	priority_level = priority_level or ""
+	impact_band = impact_band or ""
+	requires_exec = cint(requires_exec)
+	is_sla_breached = cint(is_sla_breached)
 	if priority_level == PRIORITY_P1_CRITICAL:
 		return ESCALATION_L3
 	if impact_band == IMPACT_BAND_CRITICAL:

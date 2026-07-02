@@ -7,6 +7,7 @@ import frappe
 from frappe.utils import cint, flt, get_datetime, now_datetime
 
 from srm_core.services.attachments import diff_incident_attachments
+from srm_core.services.idempotency import get_existing_name_by_idempotency_key, safe_doc_insert
 from srm_core.services.comments import diff_incident_comments, parse_mention_users_field
 from srm_core.services.risk_rollup import linked_risk_changed, residual_risk_materially_changed
 
@@ -154,11 +155,10 @@ def emit_incident_event(
 	severity=SEVERITY_INFO,
 ):
 	"""Insert a timeline event if idempotency key is unused."""
-	if idempotency_key and frappe.db.exists(
-		"SRM Incident Event",
-		{"idempotency_key": idempotency_key},
-	):
-		return None
+	if idempotency_key:
+		existing = get_existing_name_by_idempotency_key("SRM Incident Event", idempotency_key)
+		if existing:
+			return None
 
 	event_doc = frappe.get_doc(
 		build_event(
@@ -173,11 +173,19 @@ def emit_incident_event(
 			severity=severity,
 		)
 	)
-	event_doc.insert(ignore_permissions=True)
+	inserted = safe_doc_insert(
+		event_doc,
+		doctype="SRM Incident Event",
+		idempotency_key=idempotency_key,
+		context=f"{incident}|{event_type}",
+	)
+	if not inserted:
+		return None
+
 	from srm_core.services.notifications import process_notifications_for_event
 
-	process_notifications_for_event(event_doc)
-	return event_doc
+	process_notifications_for_event(inserted)
+	return inserted
 
 
 def get_incident_timeline(incident_name, limit=100):
