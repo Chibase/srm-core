@@ -1,7 +1,18 @@
 .DS_Store
-*.pyc
 *.egg-info
 *.swp
 tags
 node_modules
-__pycache__
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment and secrets
+.venv/
+.env
+
+# Logs
+*.log
+
