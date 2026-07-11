@@ -37,3 +37,36 @@ def get_session():
 		"roles": roles,
 		"trustLedgerRole": map_trustledger_role(roles),
 	}
+
+
+def ensure_pilot_user(email: str = "pilot@trustledger.co.za", password: str | None = None):
+	"""Ops helper: create/enable a TrustLedger pilot user with SRM Admin.
+
+	Not whitelisted — call via: bench execute srm_core.api.auth.ensure_pilot_user
+	"""
+	from frappe.utils.password import update_password
+
+	if not password:
+		password = frappe.generate_hash(length=12)
+
+	if frappe.db.exists("User", email):
+		user = frappe.get_doc("User", email)
+		user.enabled = 1
+		user.save(ignore_permissions=True)
+	else:
+		user = frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": email,
+				"first_name": "TrustLedger",
+				"last_name": "Pilot",
+				"send_welcome_email": 0,
+				"user_type": "System User",
+			}
+		)
+		user.insert(ignore_permissions=True)
+
+	user.add_roles("SRM Admin", "System Manager")
+	update_password(email, password)
+	frappe.db.commit()
+	return {"email": email, "password": password, "roles": frappe.get_roles(email)}
