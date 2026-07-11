@@ -60,7 +60,11 @@ The following entities are planned. DocType names may be refined in later packet
 | 05 | Project Site & workspace | Project Site DocType; populate Stakeholder Relations Hub | Planned |
 | 06 | Intelligence & SLP | Intelligence Note + SLP Indicator DocTypes | Planned |
 | 07 | Reports & dashboards | Standard reports, number cards, charts | Planned |
-| 08 | API & integrations | Whitelisted methods, optional sl2b_app hooks | Planned |
+| 08 | API & integrations | Whitelisted methods, optional sl2b_app hooks | Superseded by Packet 16 |
+| 16 | TrustLedger public API | Whitelisted DTO methods for Vercel frontend live mode | **Active** |
+
+> Packets 01–15 (DocTypes through production hardening) are complete — see `CHANGELOG_INTERNAL.md`.
+> Packet 16 implements the TrustLedger frontend contract (`docs/TRUSTLEDGER_API.md`).
 
 ## 5. Active Packet Template
 
@@ -115,14 +119,15 @@ srm_core/
 
 ## 9. Out of Scope (unless a future packet says otherwise)
 
-- Custom front-end SPA outside Frappe desk
+- Custom front-end SPA outside Frappe desk *(except TrustLedger Vercel app via Packet 16)*
 - Third-party CRM sync
 - Mobile-native apps
-- AI / sentiment analysis (future phase)
+- Live xAI / Grok network calls (heuristics first; key-gated later)
 
 ## 10. Revision History
 
 | Date | Change |
 |------|--------|
+| 2026-07-11 | Packet 16 TrustLedger public API activated |
 | 2026-07-02 | Initial BUILD_PLAN created (Packet 00) |
 

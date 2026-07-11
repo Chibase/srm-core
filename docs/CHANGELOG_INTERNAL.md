@@ -554,3 +554,39 @@ Copy this block for each completed packet:
 - Real email provider integration still deferred; notification dispatch remains stubbed.
 - Concurrency stress tests deferred; duplicate protection relies on pre-check + DB unique constraint.
 
+---
+
+## Packet 16 — TrustLedger Public API (2026-07-11)
+
+**Commit:** _(pending on develop)_
+
+### Summary
+- Added whitelisted TrustLedger DTO methods under `srm_core.api` matching the frontend `FRAPPE_API_CONTRACT`.
+- Serializers map `SRM Incident` status/priority/SLA/escalation/timeline/evidence into TrustLedger shapes.
+- Project list/get stubs derived from distinct `SRM Incident.project` values.
+- Meeting notes return `[]` until Engagement DocType exists.
+- AI methods ship as role-gated heuristics (`srm-heuristic-v0` / `srm-ai-v0`) with audit fields.
+- Added `test_trustledger_api.py` and packet docs (`TRUSTLEDGER_API.md`, ADR-015).
+
+### Files changed
+- `srm_core/api/__init__.py` (new)
+- `srm_core/api/serializers.py` (new)
+- `srm_core/api/incidents.py` (new)
+- `srm_core/api/projects.py` (new)
+- `srm_core/api/engagements.py` (new)
+- `srm_core/api/ai.py` (new)
+- `srm_core/srm_core/tests/test_trustledger_api.py` (new)
+- `docs/TRUSTLEDGER_API.md` (new)
+- `docs/BUILD_PLAN.md` (updated)
+- `docs/DECISIONS.md` (updated)
+- `docs/CHANGELOG_INTERNAL.md` (updated)
+
+### Migration / tests
+- migrate: N/A (no schema)
+- run-tests: pending on Interserv bench (`test_trustledger_api`)
+
+### Notes / follow-ups
+- Interserv CORS for Vercel domain is ops (not this packet).
+- Replace AI heuristics with xAI when site config key is present.
+- Replace project stubs when Project Site DocType lands.
+

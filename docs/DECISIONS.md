@@ -149,3 +149,12 @@ Copy this block for each new decision:
 - **Consequences:** Reruns are safe and observable; ops recovery is scripted; minor race windows still rely on DB uniqueness rather than distributed locks.
 - **Alternatives considered:** Application-level distributed locks (overkill for current scale); deleting duplicate rows on conflict (destructive to audit trail).
 
+### ADR-015: TrustLedger DTO API as thin serializers over SRM Incident
+
+- **Date:** 2026-07-11
+- **Status:** Accepted
+- **Context:** The TrustLedger Vercel app needs stable JSON shapes (`Incident`, `Project`, AI suggestions) while SRM Core DocTypes continue to evolve; live mode must degrade cleanly when Project Site / Engagement DocTypes are missing.
+- **Decision:** Expose whitelisted methods under `srm_core.api.*` that serialize existing `SRM Incident` (+ events, attachments) into TrustLedger DTOs; derive project stubs from distinct `project` values; return empty meeting notes until Engagement exists; ship AI as deterministic heuristics with `model` + `promptVersion` until site config enables xAI.
+- **Consequences:** Frontend can flip `NEXT_PUBLIC_DATA_MODE=live` without waiting for new DocTypes; serializers become the contract surface; project/notes fidelity is limited until dedicated DocTypes land.
+- **Alternatives considered:** Waiting for Project Site + Engagement DocTypes before any API; duplicating domain into a separate REST service.
+
