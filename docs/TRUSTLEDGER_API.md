@@ -18,6 +18,7 @@
 | `list_projects` / `get_project` | `srm_core.api.projects` |
 | `list_meeting_notes` | `srm_core.api.engagements` |
 | `suggest_triage` / `suggest_sentiment` / `draft_response` / `generate_report_brief` | `srm_core.api.ai` |
+| `get_session` | `srm_core.api.auth` |
 
 ## Status mapping (DocType → TrustLedger)
 
