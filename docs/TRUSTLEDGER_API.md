@@ -25,11 +25,19 @@
 | Path | Auth | Response |
 |------|------|----------|
 | `GET /health` | Guest allowed | `200` JSON: `status` (`"ok"`), `service` (`"srm-core"`), `timestamp` (ISO-8601 UTC) |
+| `GET /ready` | Guest allowed | `200` when ready / `503` when not ready; JSON: `status` (`"ready"`\|`"not_ready"`), `service`, `timestamp`, `checks.db` / `checks.cache` (`ok`\|`fail`, optional `detail`) |
 
+**Liveness (`/health`)**
 - Implementation: `srm_core.www.health.HealthPageRenderer` + `srm_core.api.health.build_health_payload`
 - Optional RPC alias: `/api/method/srm_core.api.health.health` (same payload)
 - No DB / dependency checks; `Cache-Control: no-store`
 - Spec: `docs/architecture/health-endpoint-spec.md`
+
+**Readiness (`/ready`)**
+- Implementation: `srm_core.www.ready.ReadyPageRenderer` + `srm_core.api.ready.build_ready_payload`
+- Optional RPC alias: `/api/method/srm_core.api.ready.ready` (payload only; HTTP status via `GET /ready`)
+- Lightweight checks: DB `select 1`, cache Redis ping; `Cache-Control: no-store`
+- Spec: `docs/architecture/ready-endpoint-spec.md`
 
 ## Status mapping (DocType → TrustLedger)
 
