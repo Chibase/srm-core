@@ -1,4 +1,4 @@
-﻿# SRM Core
+# SRM Core
 
 Core platform repository for SRM services and shared modules.
 
