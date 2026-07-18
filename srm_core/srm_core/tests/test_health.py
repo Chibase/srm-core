@@ -26,7 +26,7 @@ class TestHealth(FrappeTestCase):
 		normalized = payload["timestamp"].replace("Z", "+00:00")
 		datetime.fromisoformat(normalized)
 
-	def test_health_whitelist_as_guest(self):
+	def test_health_payload_guest_safe(self):
 		frappe.set_user("Guest")
 		payload = health()
 		self.assertEqual(payload["status"], "ok")
