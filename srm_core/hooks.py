@@ -70,6 +70,11 @@ app_license = "mit"
 # automatically create page for each record of this doctype
 # website_generators = ["Web Page"]
 
+# Custom page renderers (JSON probes, etc.)
+page_renderer = [
+	"srm_core.www.health.HealthPageRenderer",
+]
+
 # Jinja
 # ----------
 
