@@ -1,41 +1,62 @@
-### Srm Core
+# SRM Core
 
-SRM Intelligence Platform
+Core platform repository for SRM services and shared modules.
 
-### Installation
+## Goals
+- Keep core platform logic in one maintainable monorepo.
+- Enable fast local development and safe CI/CD.
+- Support AI-assisted development workflows (Cursor + GitHub Copilot) with clear guardrails.
 
-You can install this app using the [bench](https://github.com/frappe/bench) CLI:
+## Repository Structure
 
-```bash
-cd $PATH_TO_YOUR_BENCH
-bench get-app $URL_OF_THIS_REPO --branch develop
-bench install-app srm_core
+```text
+srm-core/
+├─ apps/
+│  ├─ api/                  # Backend API service
+│  ├─ web/                  # Frontend app (admin/user portal)
+│  └─ worker/               # Background jobs / queues / schedulers
+├─ packages/
+│  ├─ config/               # Shared lint/tsconfig/build presets
+│  ├─ types/                # Shared TypeScript/domain types
+│  └─ utils/                # Shared utilities
+├─ docs/
+│  ├─ architecture/         # System diagrams and architecture docs
+│  ├─ api/                  # API specs and endpoint docs
+│  ├─ decisions/            # ADRs (Architecture Decision Records)
+│  └─ runbooks/             # Operational guides
+├─ infra/
+│  ├─ docker/               # Dockerfiles / compose snippets
+│  ├─ terraform/            # IaC (or pulumi)
+│  └─ github/               # CI/CD helper scripts/templates
+├─ scripts/                 # Dev and CI helper scripts
+├─ tests/
+│  ├─ e2e/
+│  ├─ integration/
+│  └─ performance/
+└─ .github/
+   ├─ workflows/
+   ├─ ISSUE_TEMPLATE/
+   └─ pull_request_template.md
 ```
 
-### Contributing
+## AI-Assisted Delivery Workflow
 
-This app uses `pre-commit` for code formatting and linting. Please [install pre-commit](https://pre-commit.com/#installation) and enable it for this repository:
+This repository uses a structured AI workflow:
 
-```bash
-cd apps/srm_core
-pre-commit install
-```
+1. **Spec (Gemini)**  
+   Use: `scripts/ai/gemini-spec-prompt.md`
 
-Pre-commit is configured to use the following tools for checking and formatting your code:
+2. **Build (Cursor)**  
+   Use: `scripts/ai/cursor-implementation-prompt.md`
 
-- ruff
-- eslint
-- prettier
-- pyupgrade
+3. **Verify (GitHub Copilot)**  
+   Use: `scripts/ai/copilot-verify-prompt.md`
 
-### CI
+4. **Merge (Human Gate)**  
+   CI green, acceptance criteria met, reviewer approved, docs updated when needed.
 
-This app can use GitHub Actions for CI. The following workflows are configured:
-
-- CI: Installs this app and runs unit tests on every push to `develop` branch.
-- Linters: Runs [Frappe Semgrep Rules](https://github.com/frappe/semgrep-rules) and [pip-audit](https://pypi.org/project/pip-audit/) on every pull request.
-
-
-### License
-
-mit
+### Required References
+- Orchestration playbook: `docs/automation/ai-orchestration.md`
+- Task lifecycle runbook: `docs/automation/ai-task-lifecycle.md`
+- PR disclosure snippet: `docs/automation/pr-ai-disclosure-snippet.md`
+- AI task issue template: `.github/ISSUE_TEMPLATE/ai-task.yml`

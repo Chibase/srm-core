@@ -1,0 +1,98 @@
+name: "AI Task"
+description: "Execution-ready task for Gemini (spec), Cursor (build), Copilot (verify)"
+title: "[AI Task] "
+labels: ["ai-task"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What problem are we solving and why now?
+      placeholder: Describe business/technical context.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Explicitly define in-scope and out-of-scope items.
+      placeholder: |
+        In scope:
+        - ...
+        Out of scope:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Pass/fail conditions.
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Security, performance, compliance, compatibility, deadline.
+      placeholder: List mandatory constraints.
+    validations:
+      required: true
+
+  - type: textarea
+    id: testplan
+    attributes:
+      label: Test Plan
+      description: Unit/integration/e2e coverage expectations.
+      placeholder: |
+        Unit:
+        Integration:
+        E2E:
+    validations:
+      required: true
+
+  - type: dropdown
+    id: spec_tool
+    attributes:
+      label: Spec Tool
+      options:
+        - Gemini
+    validations:
+      required: true
+
+  - type: dropdown
+    id: build_tool
+    attributes:
+      label: Build Tool
+      options:
+        - Cursor
+    validations:
+      required: true
+
+  - type: dropdown
+    id: verify_tool
+    attributes:
+      label: Verify Tool
+      options:
+        - GitHub Copilot
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: done_gate
+    attributes:
+      label: Definition of Done Gates
+      description: Must all be true before merge.
+      options:
+        - label: Acceptance criteria met
+        - label: CI is green
+        - label: Reviewer approval obtained
+        - label: Docs updated if behavior/architecture changed
+        - label: Rollback notes included (if release-impacting)
+          required: false
