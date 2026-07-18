@@ -73,6 +73,7 @@ app_license = "mit"
 # Custom page renderers (JSON probes, etc.)
 page_renderer = [
 	"srm_core.www.health.HealthPageRenderer",
+	"srm_core.www.ready.ReadyPageRenderer",
 ]
 
 # Jinja
