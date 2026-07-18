@@ -86,3 +86,18 @@ class TestReady(FrappeTestCase):
 		data = json.loads(response.get_data(as_text=True))
 		self.assertEqual(data["status"], "not_ready")
 		self.assertEqual(data["checks"]["db"]["status"], "fail")
+
+	def test_get_ready_http_not_ready_cache(self):
+		from frappe.website.serve import get_response
+
+		frappe.set_user("Guest")
+		with patch("srm_core.api.ready.check_db", return_value={"status": "ok"}), patch(
+			"srm_core.api.ready.check_cache",
+			return_value={"status": "fail", "detail": "cache unavailable"},
+		):
+			response = get_response("/ready")
+		self.assertEqual(response.status_code, 503)
+		payload = json.loads(response.get_data(as_text=True))
+		self.assertEqual(payload["status"], "not_ready")
+		self.assertIn("checks", payload)
+		self.assertEqual(payload["checks"]["cache"]["status"], "fail")
