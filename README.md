@@ -1,4 +1,4 @@
-# SRM Core
+﻿# SRM Core
 
 Core platform repository for SRM services and shared modules.
 
@@ -42,6 +42,7 @@ srm-core/
 ## Platform probes
 
 - `GET /health` — public liveness JSON (`status`, `service`, `timestamp`). See `docs/TRUSTLEDGER_API.md` (Platform probes) and `docs/architecture/health-endpoint-spec.md`.
+- `GET /ready` — public readiness JSON (`status`, `service`, `timestamp`, `checks.db` / `checks.cache`); `200` ready / `503` not ready. See `docs/architecture/ready-endpoint-spec.md`.
 
 ## AI-Assisted Delivery Workflow
 
