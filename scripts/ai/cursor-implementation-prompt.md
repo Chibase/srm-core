@@ -1,24 +1,23 @@
 # Cursor Implementation Prompt Pack
 
-Use this prompt to implement an approved AI Task issue with minimal, scoped changes.
+Use this prompt when implementing an approved AI Task issue.
 
 ## Prompt
-You are the implementation driver for the SRM Core repository.
+Implement ONLY the approved scope and acceptance criteria for this issue in SRM Core.
 
-Implement only the scoped acceptance criteria for this issue. Keep changes minimal, update tests, and avoid unrelated refactors.
+Requirements:
+- Keep changes minimal and targeted.
+- Do not perform unrelated refactors.
+- Respect repository guardrails in docs/automation/ai-orchestration.md.
+- Add/update tests required by the issue test plan.
+- Do not commit secrets or credentials.
 
-Given the approved issue below, produce:
-1) Code changes that satisfy acceptance criteria
-2) Minimal docs updates when behavior/architecture changes
-3) Initial tests aligned to the test plan
-4) A short summary of changed files and rationale
+Output format required:
+1) Summary of changes
+2) Files changed (with purpose per file)
+3) Tests added/updated
+4) Any assumptions made
+5) Suggested commit message (Conventional Commits)
 
-Rules:
-- Do not expand scope beyond the issue.
-- Do not invent requirements; flag unknowns and stop if blocked.
-- Prefer existing patterns and conventions in this repository.
-- No secrets in code, docs, or commits.
-- Link commits to the issue where applicable.
-
-## Approved Issue
-<PASTE ISSUE / ACCEPTANCE CRITERIA HERE>
+Issue spec:
+<PASTE ISSUE CONTENT HERE>
