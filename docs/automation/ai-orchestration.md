@@ -92,22 +92,22 @@ Required before merge:
 
 Each task must include:
 
-## Context
+### Context
 What problem is being solved and why now.
 
-## Scope
+### Scope
 Exactly what is in/out.
 
-## Acceptance Criteria
+### Acceptance Criteria
 Clear pass/fail bullets.
 
-## Constraints
+### Constraints
 Security, performance, compliance, timeline, compatibility.
 
-## Test Plan
+### Test Plan
 Unit/integration/e2e expectations.
 
-## AI Tool Assignment
+### AI Tool Assignment
 - Spec: Gemini
 - Build: Cursor
 - Verify: Copilot

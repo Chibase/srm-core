@@ -91,12 +91,8 @@ body:
       description: Must all be true before merge.
       options:
         - label: Acceptance criteria met
-          required: true
         - label: CI is green
-          required: true
         - label: Reviewer approval obtained
-          required: true
         - label: Docs updated if behavior/architecture changed
-          required: true
         - label: Rollback notes included (if release-impacting)
           required: false

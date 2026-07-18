@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: SRM Core AI Orchestration Playbook
-    url: https://github.com/Chibase/srm-core/blob/chore/bootstrap-structure/docs/automation/ai-orchestration.md
+    url: https://github.com/Chibase/srm-core/blob/develop/docs/automation/ai-orchestration.md
     about: Read the required Gemini → Cursor → Copilot delivery flow before opening tasks.
