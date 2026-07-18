@@ -1,4 +1,4 @@
-# SRM Core
+﻿# SRM Core
 
 Core platform repository for SRM services and shared modules.
 
@@ -38,6 +38,10 @@ srm-core/
    ├─ ISSUE_TEMPLATE/
    └─ pull_request_template.md
 ```
+
+## Platform probes
+
+- `GET /health` — public liveness JSON (`status`, `service`, `timestamp`). See `docs/TRUSTLEDGER_API.md` (Platform probes) and `docs/architecture/health-endpoint-spec.md`.
 
 ## AI-Assisted Delivery Workflow
 

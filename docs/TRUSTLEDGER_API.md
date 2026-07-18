@@ -20,6 +20,17 @@
 | `suggest_triage` / `suggest_sentiment` / `draft_response` / `generate_report_brief` | `srm_core.api.ai` |
 | `get_session` | `srm_core.api.auth` |
 
+## Platform probes
+
+| Path | Auth | Response |
+|------|------|----------|
+| `GET /health` | Guest allowed | `200` JSON: `status` (`"ok"`), `service` (`"srm-core"`), `timestamp` (ISO-8601 UTC) |
+
+- Implementation: `srm_core.www.health.HealthPageRenderer` + `srm_core.api.health.build_health_payload`
+- Optional RPC alias: `/api/method/srm_core.api.health.health` (same payload)
+- No DB / dependency checks; `Cache-Control: no-store`
+- Spec: `docs/architecture/health-endpoint-spec.md`
+
 ## Status mapping (DocType → TrustLedger)
 
 | SRM Incident.status | TrustLedger status |
