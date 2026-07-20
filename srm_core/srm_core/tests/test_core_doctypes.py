@@ -58,4 +58,3 @@ class TestCoreDoctypes(FrappeTestCase):
 		)
 		with self.assertRaises(frappe.ValidationError):
 			investigation.insert()
-

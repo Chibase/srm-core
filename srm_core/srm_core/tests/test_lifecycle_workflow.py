@@ -118,4 +118,3 @@ class TestLifecycleWorkflow(FrappeTestCase):
 			any(investigation.name in comment.content for comment in comments),
 			"Expected investigation completion comment on incident timeline.",
 		)
-

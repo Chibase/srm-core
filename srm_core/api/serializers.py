@@ -28,9 +28,7 @@ def _iso(value) -> str | None:
 
 def map_incident_status(doc: Any) -> str:
 	status = (doc.get("status") if isinstance(doc, dict) else doc.status) or "Open"
-	is_escalated = cint(
-		doc.get("is_escalated") if isinstance(doc, dict) else getattr(doc, "is_escalated", 0)
-	)
+	is_escalated = cint(doc.get("is_escalated") if isinstance(doc, dict) else getattr(doc, "is_escalated", 0))
 	if status in (INCIDENT_RESOLVED, INCIDENT_CLOSED):
 		return "Closed"
 	if is_escalated:

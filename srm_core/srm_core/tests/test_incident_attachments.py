@@ -24,9 +24,7 @@ class TestIncidentAttachments(FrappeTestCase):
 		super().setUpClass()
 		ensure_srm_roles()
 		cls.lead_user = cls._ensure_user("srm-lead-attach@test.com", "SRM Lead")
-		cls.case_manager_user = cls._ensure_user(
-			"srm-case-manager-attach@test.com", "SRM Case Manager"
-		)
+		cls.case_manager_user = cls._ensure_user("srm-case-manager-attach@test.com", "SRM Case Manager")
 
 	@classmethod
 	def _ensure_user(cls, email, role):

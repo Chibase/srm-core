@@ -113,14 +113,10 @@ def validate_investigation_task_rows(rows, now=None):
 			frappe.throw(_("Task Title is required for each investigation task row."))
 
 		if not row.assignee:
-			frappe.throw(
-				_("Assignee is required for investigation task: {0}").format(row.task_title)
-			)
+			frappe.throw(_("Assignee is required for investigation task: {0}").format(row.task_title))
 
 		if not row.status:
-			frappe.throw(
-				_("Status is required for investigation task: {0}").format(row.task_title)
-			)
+			frappe.throw(_("Status is required for investigation task: {0}").format(row.task_title))
 
 		if row.status not in VALID_TASK_STATUSES:
 			frappe.throw(
@@ -135,6 +131,4 @@ def validate_investigation_task_rows(rows, now=None):
 		labels = []
 		for title, assignee in sorted(duplicates):
 			labels.append(f"{title} ({assignee})")
-		frappe.throw(
-			_("Duplicate open investigation tasks are not allowed: {0}").format(", ".join(labels))
-		)
+		frappe.throw(_("Duplicate open investigation tasks are not allowed: {0}").format(", ".join(labels)))

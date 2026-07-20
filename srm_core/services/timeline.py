@@ -7,8 +7,8 @@ import frappe
 from frappe.utils import cint, flt, get_datetime, now_datetime
 
 from srm_core.services.attachments import diff_incident_attachments
-from srm_core.services.idempotency import get_existing_name_by_idempotency_key, safe_doc_insert
 from srm_core.services.comments import diff_incident_comments, parse_mention_users_field
+from srm_core.services.idempotency import get_existing_name_by_idempotency_key, safe_doc_insert
 from srm_core.services.risk_rollup import linked_risk_changed, residual_risk_materially_changed
 
 EVENT_INCIDENT_CREATED = "INCIDENT_CREATED"
@@ -259,7 +259,11 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 			idempotency_key=make_idempotency_key(doc.name, EVENT_STATUS_CHANGED, snapshot),
 		)
 
-	if is_insert or field_changed(previous, doc, "impact_score") or field_changed(previous, doc, "impact_band"):
+	if (
+		is_insert
+		or field_changed(previous, doc, "impact_score")
+		or field_changed(previous, doc, "impact_band")
+	):
 		snapshot = {
 			"impact_score": flt(doc.impact_score),
 			"impact_band": doc.impact_band,
@@ -274,7 +278,11 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 			idempotency_key=make_idempotency_key(doc.name, EVENT_IMPACT_SCORED, snapshot),
 		)
 
-	if is_insert or field_changed(previous, doc, "priority_score") or field_changed(previous, doc, "priority_level"):
+	if (
+		is_insert
+		or field_changed(previous, doc, "priority_score")
+		or field_changed(previous, doc, "priority_level")
+	):
 		snapshot = {
 			"priority_score": flt(doc.priority_score),
 			"priority_level": doc.priority_level,
@@ -289,8 +297,10 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 			idempotency_key=make_idempotency_key(doc.name, EVENT_PRIORITY_COMPUTED, snapshot),
 		)
 
-	if is_insert or field_changed(previous, doc, "escalation_level") or field_changed(
-		previous, doc, "is_escalated"
+	if (
+		is_insert
+		or field_changed(previous, doc, "escalation_level")
+		or field_changed(previous, doc, "is_escalated")
 	):
 		snapshot = {
 			"previous_level": getattr(previous, "escalation_level", None),
@@ -308,9 +318,12 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 			severity=severity_for_escalation(doc.escalation_level),
 		)
 
-	sla_changed = is_insert or field_changed(previous, doc, "sla_target_hours") or field_changed(
-		previous, doc, "sla_due_by"
-	) or field_changed(previous, doc, "sla_due_date")
+	sla_changed = (
+		is_insert
+		or field_changed(previous, doc, "sla_target_hours")
+		or field_changed(previous, doc, "sla_due_by")
+		or field_changed(previous, doc, "sla_due_date")
+	)
 	if sla_changed:
 		snapshot = {
 			"sla_target_hours": flt(doc.sla_target_hours),
@@ -452,13 +465,10 @@ def emit_timeline_events_for_incident(doc, previous=None, is_insert=False):
 		emit_incident_event(
 			incident=doc.name,
 			event_type=EVENT_RESIDUAL_RISK_UPDATED,
-			summary=(
-				f"Residual risk updated: {doc.residual_risk_score} ({doc.residual_risk_band})"
-			),
+			summary=(f"Residual risk updated: {doc.residual_risk_score} ({doc.residual_risk_band})"),
 			details=snapshot,
 			actor=actor,
 			event_time=event_time,
 			idempotency_key=make_idempotency_key(doc.name, EVENT_RESIDUAL_RISK_UPDATED, snapshot),
 			severity=SEVERITY_CRITICAL if doc.residual_risk_band == "Critical" else SEVERITY_INFO,
 		)
-

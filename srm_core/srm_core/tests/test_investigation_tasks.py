@@ -25,9 +25,7 @@ class TestInvestigationTasks(FrappeTestCase):
 		super().setUpClass()
 		ensure_srm_roles()
 		cls.analyst_user = cls._ensure_user("srm-analyst-tasks@test.com", "SRM Analyst")
-		cls.case_manager_user = cls._ensure_user(
-			"srm-case-manager-tasks@test.com", "SRM Case Manager"
-		)
+		cls.case_manager_user = cls._ensure_user("srm-case-manager-tasks@test.com", "SRM Case Manager")
 
 	@classmethod
 	def _ensure_user(cls, email, role):
@@ -143,8 +141,7 @@ class TestInvestigationTasks(FrappeTestCase):
 
 	def test_blocking_list_message_formatting(self):
 		blocking = [
-			frappe._dict({"task_title": f"Task {index}", "status": TASK_STATUS_OPEN})
-			for index in range(1, 8)
+			frappe._dict({"task_title": f"Task {index}", "status": TASK_STATUS_OPEN}) for index in range(1, 8)
 		]
 		message = format_blocking_tasks_message(blocking)
 		self.assertIn("Task 1", message)

@@ -43,20 +43,26 @@ def check_cache() -> dict[str, str]:
 
 def run_readiness_checks(
 	*,
-	db_check=check_db,
-	cache_check=check_cache,
+	db_check=None,
+	cache_check=None,
 ) -> dict[str, dict[str, str]]:
-	"""Run required checks (injectable for tests)."""
+	"""Run required checks (injectable for tests).
+
+	Defaults are resolved at call time so unittest.mock.patch on
+	``check_db`` / ``check_cache`` is honored by HTTP tests.
+	"""
+	db_fn = check_db if db_check is None else db_check
+	cache_fn = check_cache if cache_check is None else cache_check
 	return {
-		"db": db_check(),
-		"cache": cache_check(),
+		"db": db_fn(),
+		"cache": cache_fn(),
 	}
 
 
 def build_ready_payload(
 	*,
-	db_check=check_db,
-	cache_check=check_cache,
+	db_check=None,
+	cache_check=None,
 ) -> tuple[dict[str, Any], int]:
 	"""Return (payload, http_status) for GET /ready."""
 	checks = run_readiness_checks(db_check=db_check, cache_check=cache_check)

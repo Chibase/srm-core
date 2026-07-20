@@ -10,12 +10,8 @@ from frappe.utils import cint, now_datetime
 from srm_core.services.permissions import user_has_system_manager_role
 from srm_core.services.statuses import INCIDENT_CLOSED
 
-VALID_EVIDENCE_TYPES = frozenset(
-	{"screenshot", "document", "audio", "video", "log", "other"}
-)
-VALID_CLASSIFICATIONS = frozenset(
-	{"public", "internal", "confidential", "restricted"}
-)
+VALID_EVIDENCE_TYPES = frozenset({"screenshot", "document", "audio", "video", "log", "other"})
+VALID_CLASSIFICATIONS = frozenset({"public", "internal", "confidential", "restricted"})
 SENSITIVE_CLASSIFICATIONS = frozenset({"confidential", "restricted"})
 
 
@@ -38,11 +34,7 @@ def normalize_file_name(file_url):
 
 def validate_single_primary_evidence(rows):
 	"""Ensure at most one active primary evidence attachment exists."""
-	primary_count = sum(
-		1
-		for row in rows or []
-		if cint(row.is_primary_evidence) and not cint(row.is_removed)
-	)
+	primary_count = sum(1 for row in rows or [] if cint(row.is_primary_evidence) and not cint(row.is_removed))
 	if primary_count > 1:
 		frappe.throw(_("Only one active primary evidence attachment is allowed."))
 
@@ -80,7 +72,9 @@ def validate_closed_incident_attachment_changes(rows, previous_rows, incident_st
 
 	previous_by_name = {row.name: row for row in (previous_rows or []) if row.name}
 	for row in rows or []:
-		is_new_row = getattr(row, "is_new", lambda: True)() or not row.name or row.name not in previous_by_name
+		is_new_row = (
+			getattr(row, "is_new", lambda: True)() or not row.name or row.name not in previous_by_name
+		)
 		if is_new_row:
 			frappe.throw(_("Cannot add attachments to a closed incident."))
 
@@ -116,7 +110,9 @@ def validate_incident_attachment_rows(rows, previous_rows=None, incident_status=
 		if row.classification not in VALID_CLASSIFICATIONS:
 			frappe.throw(_("Invalid classification for attachment: {0}").format(row.file_name))
 
-		is_new_row = getattr(row, "is_new", lambda: True)() or not row.name or row.name not in previous_by_name
+		is_new_row = (
+			getattr(row, "is_new", lambda: True)() or not row.name or row.name not in previous_by_name
+		)
 		if is_new_row:
 			row.attached_on = row.attached_on or now
 			row.attached_by = row.attached_by or user

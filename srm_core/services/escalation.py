@@ -157,9 +157,9 @@ def validate_high_priority_assignment(priority_level, incident_owner, investigat
 
 	if not incident_owner:
 		frappe.throw(
-			_(
-				"Incident Owner is required for {0} incidents. Assign an owner before saving."
-			).format(priority_level)
+			_("Incident Owner is required for {0} incidents. Assign an owner before saving.").format(
+				priority_level
+			)
 		)
 
 	if not has_accountable_investigation_task(investigation_tasks):
