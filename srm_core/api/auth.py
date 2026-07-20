@@ -5,7 +5,6 @@ from __future__ import annotations
 import frappe
 from frappe import _
 
-
 ROLE_PRIORITY = (
 	("admin", ("System Manager", "SRM Admin")),
 	("client", ("SRM Lead", "SRM Case Manager")),

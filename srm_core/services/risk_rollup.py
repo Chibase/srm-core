@@ -70,10 +70,10 @@ def build_residual_rationale(
 ):
 	"""Build human-readable rationale for computed residual risk."""
 	escalation_score = ESCALATION_SCORE_MAP.get(escalation_level or ESCALATION_NONE, 10)
-	completion_pct = int(round(flt(task_completion_ratio) * 100))
+	completion_pct = round(flt(task_completion_ratio) * 100)
 	return _(
-		"Residual risk {0} ({1}): impact {2}×35%, priority {3}×35%, "
-		"escalation {4}→{5}×20%, task completion {6}% (penalty applied)."
+		"Residual risk {0} ({1}): impact {2}x35%, priority {3}x35%, "
+		"escalation {4}->{5}x20%, task completion {6}% (penalty applied)."
 	).format(
 		score,
 		band,

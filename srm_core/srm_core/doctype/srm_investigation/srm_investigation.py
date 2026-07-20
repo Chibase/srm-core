@@ -7,9 +7,9 @@ from frappe.model.document import Document
 from frappe.utils import getdate
 
 from srm_core.services.statuses import (
-	INVESTIGATION_COMPLETION_STATUSES,
 	INCIDENT_OPEN,
 	INCIDENT_UNDER_INVESTIGATION,
+	INVESTIGATION_COMPLETION_STATUSES,
 )
 
 
@@ -31,10 +31,7 @@ class SRMInvestigation(Document):
 		if not previous:
 			return
 
-		if (
-			previous.status != self.status
-			and self.status in INVESTIGATION_COMPLETION_STATUSES
-		):
+		if previous.status != self.status and self.status in INVESTIGATION_COMPLETION_STATUSES:
 			self._add_incident_completion_comment()
 
 	def _validate_target_close_date(self):
@@ -54,4 +51,3 @@ class SRMInvestigation(Document):
 				title=f"SRM Investigation comment failed for {self.name}",
 				message=frappe.get_traceback(),
 			)
-

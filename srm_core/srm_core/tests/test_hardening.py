@@ -222,12 +222,8 @@ class TestProductionHardening(FrappeTestCase):
 		self.assertTrue(doc.impact_score)
 		self.assertTrue(doc.priority_level)
 		self.assertTrue(doc.residual_risk_band)
-		self.assertTrue(
-			frappe.db.count("SRM Incident Event", {"incident": doc.name}) >= 5
-		)
-		self.assertTrue(
-			frappe.db.count("SRM Notification", {"incident": doc.name}) >= 1
-		)
+		self.assertTrue(frappe.db.count("SRM Incident Event", {"incident": doc.name}) >= 5)
+		self.assertTrue(frappe.db.count("SRM Notification", {"incident": doc.name}) >= 1)
 
 	def test_non_system_manager_cannot_run_maintenance(self):
 		frappe.set_user(self.lead_user)

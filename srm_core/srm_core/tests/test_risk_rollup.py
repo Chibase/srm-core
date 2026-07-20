@@ -39,9 +39,7 @@ class TestRiskRollup(FrappeTestCase):
 		ensure_srm_roles()
 		cls.lead_user = cls._ensure_user("srm-lead-risk@test.com", "SRM Lead")
 		cls.admin_user = cls._ensure_user("srm-admin-risk@test.com", "SRM Admin")
-		cls.case_manager_user = cls._ensure_user(
-			"srm-case-manager-risk@test.com", "SRM Case Manager"
-		)
+		cls.case_manager_user = cls._ensure_user("srm-case-manager-risk@test.com", "SRM Case Manager")
 
 	@classmethod
 	def _ensure_user(cls, email, role):

@@ -108,9 +108,7 @@ def validate_impact_assessment_rows(rows):
 			)
 
 		if not cint(frappe.db.get_value("SRM Impact Taxonomy", row.impact_taxonomy, "is_active")):
-			frappe.throw(
-				_("Impact taxonomy {0} is inactive and cannot be used.").format(row.impact_taxonomy)
-			)
+			frappe.throw(_("Impact taxonomy {0} is inactive and cannot be used.").format(row.impact_taxonomy))
 
 	duplicates = find_duplicate_taxonomies(rows)
 	if duplicates:
