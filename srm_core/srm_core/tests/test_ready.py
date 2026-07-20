@@ -105,7 +105,8 @@ class TestReady(FrappeTestCase):
 		):
 			response = get_response("/ready")
 		self.assertEqual(response.status_code, 503)
+		self.assertIn("application/json", response.headers.get("Content-Type", ""))
 		payload = json.loads(response.get_data(as_text=True))
 		self.assertEqual(payload["status"], "not_ready")
-		self.assertIn("checks", payload)
+		self.assertEqual(payload["checks"]["db"]["status"], "ok")
 		self.assertEqual(payload["checks"]["cache"]["status"], "fail")
