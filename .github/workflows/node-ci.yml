@@ -33,3 +33,12 @@ jobs:
 
       - name: Test
         run: npm test --if-present
+
+  # When the Node job is skipped, GitHub marks the workflow as failed unless
+  # another job succeeds. This no-op keeps the check green for Python-only PRs.
+  skip-without-lockfile:
+    if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: No Node lockfile
+        run: echo "No package-lock.json / yarn.lock found; skipping Node CI."
