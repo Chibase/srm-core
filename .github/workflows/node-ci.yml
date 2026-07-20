@@ -13,32 +13,39 @@ concurrency:
 
 jobs:
   lint-and-test:
-    if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect Node lockfile
+        id: lock
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: No Node lockfile
+        if: steps.lock.outputs.present != 'true'
+        run: echo "No package-lock.json / yarn.lock found; skipping Node install/lint/test."
+
       - name: Setup Node
+        if: steps.lock.outputs.present == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
       - name: Install
+        if: steps.lock.outputs.present == 'true'
         run: npm ci
 
       - name: Lint
+        if: steps.lock.outputs.present == 'true'
         run: npm run lint --if-present
 
       - name: Test
+        if: steps.lock.outputs.present == 'true'
         run: npm test --if-present
-
-  # When the Node job is skipped, GitHub marks the workflow as failed unless
-  # another job succeeds. This no-op keeps the check green for Python-only PRs.
-  skip-without-lockfile:
-    if: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') == '' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: No Node lockfile
-        run: echo "No package-lock.json / yarn.lock found; skipping Node CI."
