@@ -1,0 +1,31 @@
+{
+ "actions": [],
+ "creation": "2026-09-01 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "suggestion_text"
+ ],
+ "fields": [
+  {
+   "fieldname": "suggestion_text",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Suggested Indicator",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Srm Core",
+ "name": "Communication Objective Suggestion",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

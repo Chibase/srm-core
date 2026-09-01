@@ -1,0 +1,149 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:objective_name",
+ "creation": "2026-09-01 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "objective_name",
+  "intervention",
+  "objective_type",
+  "description",
+  "column_break_1",
+  "baseline_value",
+  "target_value",
+  "column_break_2",
+  "impact_indicator",
+  "section_ai_suggestions",
+  "suggested_indicators"
+ ],
+ "fields": [
+  {
+   "fieldname": "objective_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Objective Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "intervention",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Communication Intervention",
+   "options": "Communication Intervention",
+   "reqd": 1
+  },
+  {
+   "fieldname": "objective_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Objective Type",
+   "options": "Awareness\nUnderstanding\nTrust\nParticipation\nBehaviour Change\nService Uptake",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "baseline_value",
+   "fieldtype": "Float",
+   "label": "Baseline Value",
+   "help": "Starting measurement value for this objective"
+  },
+  {
+   "fieldname": "target_value",
+   "fieldtype": "Float",
+   "label": "Target Value",
+   "help": "Desired measurement value to achieve"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "impact_indicator",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Impact Indicator",
+   "options": "Impact Indicator",
+   "help": "Link to the measurable indicator for this objective"
+  },
+  {
+   "fieldname": "section_ai_suggestions",
+   "fieldtype": "Section Break",
+   "label": "AI Suggestions (Optional)"
+  },
+  {
+   "fieldname": "suggested_indicators",
+   "fieldtype": "Table",
+   "label": "Suggested Indicators",
+   "options": "Communication Objective Suggestion",
+   "read_only": 1,
+   "help": "Auto-generated suggestions based on objective type. Select one and link it above."
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Impact Indicator",
+   "link_field": "impact_indicator"
+  }
+ ],
+ "modified": "2026-09-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Srm Core",
+ "name": "Communication Objective",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Admin",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Analyst",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "SRM Lead"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "SRM Viewer"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "objective_name",
+ "track_changes": 1
+}

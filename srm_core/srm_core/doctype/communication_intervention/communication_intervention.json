@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:intervention_name",
+ "creation": "2026-09-01 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "intervention_name",
+  "intervention_type",
+  "description",
+  "project",
+  "geographic_area",
+  "column_break_1",
+  "start_date",
+  "end_date",
+  "responsible_person",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "intervention_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Intervention Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "intervention_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Intervention Type",
+   "options": "Community Meeting\nPublic Participation\nRadio Campaign\nSocial Media Campaign\nStakeholder Workshop\nAwareness Campaign\nTraining Session\nDoor-to-Door Engagement\nSMS Campaign\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "geographic_area",
+   "fieldtype": "Link",
+   "label": "Geographic Area",
+   "options": "Geographic Area"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "responsible_person",
+   "fieldtype": "Link",
+   "label": "Responsible Person",
+   "options": "User"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nActive\nCompleted"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "Communication Objective",
+   "link_field": "intervention"
+  }
+ ],
+ "modified": "2026-09-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Srm Core",
+ "name": "Communication Intervention",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Admin",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Analyst",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "SRM Lead"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "SRM Viewer"
+  }
+ ],
+ "sort_field": "start_date",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "intervention_name",
+ "track_changes": 1
+}
