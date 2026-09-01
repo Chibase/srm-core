@@ -12,3 +12,5 @@ srm_core.patches.v1_0.backfill_incident_timeline
 srm_core.patches.v1_0.backfill_high_priority_notifications
 srm_core.patches.v1_0.backfill_incident_residual_risk
 srm_core.patches.v1_0.verify_and_repair_hardening_invariants
+srm_core.patches.v1_1.create_srm_roles
+srm_core.patches.v1_1.seed_communication_indicators
