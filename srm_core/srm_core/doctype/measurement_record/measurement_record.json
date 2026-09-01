@@ -1,0 +1,113 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 0,
+ "autoname": "format:{impact_indicator}-{measurement_date}-{name}",
+ "creation": "2026-09-01 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "impact_indicator",
+  "measurement_date",
+  "measured_value",
+  "column_break_1",
+  "notes",
+  "measured_by",
+  "verified_by"
+ ],
+ "fields": [
+  {
+   "fieldname": "impact_indicator",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Impact Indicator",
+   "options": "Impact Indicator",
+   "reqd": 1
+  },
+  {
+   "fieldname": "measurement_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Measurement Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "measured_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Measured Value",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "measured_by",
+   "fieldtype": "Link",
+   "label": "Measured By",
+   "options": "User"
+  },
+  {
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Srm Core",
+ "name": "Measurement Record",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Admin",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "SRM Analyst",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "SRM Lead"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "SRM Viewer"
+  }
+ ],
+ "sort_field": "measurement_date",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
