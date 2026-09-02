@@ -1,8 +1,8 @@
-# TrustLedger Master Roadmap - All 4 Phases
+# TrustLedger Master Roadmap - All 5 Phases
 
 ## Complete Vision
 
-TrustLedger will evolve through 4 integrated phases to answer the complete impact measurement question:
+TrustLedger will evolve through 5 integrated phases to answer the complete impact measurement question:
 
 ```
 PHASE 1: WHAT?
@@ -21,7 +21,11 @@ PHASE 4: WHO & WHERE?
          Who is experiencing the change and where?
          ↓
 
-PHASE 5+: WHY & HOW MUCH?
+PHASE 5: WHAT ARE THEY SAYING?
+         What is stakeholder feedback revealing?
+         ↓
+
+PHASE 6+: WHY & HOW MUCH?
          Why is the change occurring? (attribution, contribution)
          How much impact can we claim? (confidence, quality)
 ```
@@ -105,7 +109,7 @@ Indicator → What to Measure
 **Status:** 🔄 **BACKEND COMPLETE, FRONTEND IN PROGRESS**
 
 **Branch:** `feature/phase-2-outcome-measurement`  
-**Latest Commit:** `1044bf7` (includes Cursor brief)  
+**Latest Commit:** `1044bf7`  
 **Merged to:** (awaiting frontend completion)
 
 ### Deliverables
@@ -458,11 +462,216 @@ INSIGHTS:
 - Merge to develop: After both complete
 
 ### Ready for
-→ Phase 5+ (Attribution, Contribution, Confidence)
+→ Phase 5 (Stakeholder Response & Feedback)
 
 ---
 
-## Phase 5+: Attribution & Impact Confidence (Future)
+## Phase 5: Stakeholder Response & Feedback
+
+**Question:** What are stakeholders saying about the intervention?
+
+**Status:** 📋 **ARCHITECTED, READY TO BUILD**
+
+**Branch:** `feature/phase-5-stakeholder-response`  
+**Latest Commit:** `7d21c24`  
+**Merged to:** (awaiting backend build)
+
+### Deliverables
+
+📋 **Backend Services (To Build):**
+- Stakeholder Response DocType
+  - Capture individual feedback from stakeholders
+  - Link to intervention, objective, stakeholder/group, geographic area
+  - Classify by response type (Question, Concern, Suggestion, Complaint, etc.)
+  - Assign theme (Process, Eligibility, Documentation, etc.)
+  - Record sentiment (Positive, Neutral, Negative, Mixed)
+  - Track source method (Survey, Interview, Focus Group, Meeting, etc.)
+  - Manage status (Open, Reviewed, Closed)
+
+- Stakeholder Response Analysis Service
+  - Get responses for objective
+  - Get response summary (counts by sentiment, type, theme)
+  - Get theme analysis (drill-down on specific theme)
+  - Get response trends (monthly pattern)
+  - Detect discrepancies (measured outcome vs. qualitative feedback)
+  - Filter responses by multiple criteria
+
+- Stakeholder Response API (8 REST Endpoints)
+  - POST create_response - Create new response record
+  - GET get_responses_for_objective - Get filtered responses
+  - GET get_response_summary - High-level summary
+  - GET get_theme_analysis - Detailed theme analysis
+  - GET get_response_trend - Monthly trend data
+  - GET get_discrepancies - Outcome vs. feedback comparison
+  - GET filter_responses - Multi-criteria search
+  - PUT update_response_status - Change status and add notes
+
+📋 **Frontend Components (To Build):**
+- StakeholderResponseForm (quick capture - 30 seconds per entry)
+- ResponseSummaryCard (overview counts and top themes)
+- ResponseTable (filterable list of all responses)
+- ResponseDetailView (full response with context)
+- ThemeAnalysisCard (drill-down on specific theme)
+- DiscrepancyAlert (measured vs. qualitative gap)
+- ResponseTrendChart (monthly trend visualization)
+- QuickCaptureModal (rapid entry during meetings)
+
+### Key Functions
+
+```
+Stakeholder Response → Capture Voice
+├─ Text: "We understand relocation, but documentation unclear"
+├─ Date: 2026-07-15
+├─ Type: Concern
+├─ Theme: Documentation
+├─ Sentiment: Negative
+├─ Stakeholder Group: Affected Residents
+├─ Geographic Area: Ward 12
+├─ Intervention: Ward 12 Housing Campaign
+└─ Source: Community Meeting
+
+Response Summary
+├─ Total: 146 responses
+├─ Positive: 42 (29%)
+├─ Neutral: 37 (25%)
+├─ Negative: 51 (35%)
+├─ Mixed: 16 (11%)
+└─ Top themes: Process (38), Eligibility (27), Documentation (21)
+
+Response Trend (Monthly)
+├─ May: 12 responses (3 negative)
+├─ Jun: 21 responses (6 negative)
+├─ Jul: 37 responses (17 negative)
+└─ Aug: 49 responses (24 negative) ⚠️ Trend worsening
+
+Discrepancy Analysis
+├─ Measured: 68% understanding ✓
+├─ Feedback: 35% negative sentiment
+└─ Gap: "Understanding exists, but confidence in specifics lacks"
+```
+
+### Integration with Phase 4
+
+```
+Ward 4
+├─ Understanding: 43% (measured)
+├─ 59 stakeholder responses
+│  ├─ 26 negative (44%)
+│  ├─ Top themes:
+│  │  ├─ Documentation: 16 responses
+│  │  ├─ Eligibility: 12 responses
+│  │  └─ Process: 14 responses
+│  └─ Trend: 24 negative in Aug (up from 3 in May)
+└─ Interpretation: "Measured understanding only 43%, and qualitative
+                   feedback shows specific concerns about documentation
+                   and eligibility. Negative sentiment accelerating."
+```
+
+### Two Evidence Streams
+
+**Quantitative (Phase 3):**
+- Evidence Record: Survey verified, 68% understanding
+
+**Qualitative (Phase 5):**
+- Stakeholder Response: 146 responses, 35% negative sentiment
+
+**Together:**
+- "68% say they understand, but qualitative feedback reveals confusion about documentation, eligibility, and process specifics."
+
+### Response Types (9)
+- Question
+- Suggestion
+- Concern
+- Complaint
+- Positive Feedback
+- Negative Feedback
+- Request for Information
+- Request for Assistance
+- Other
+
+### Themes (13)
+- Programme Understanding
+- Eligibility
+- Process
+- Service Access
+- Trust
+- Participation
+- Timing
+- Documentation
+- Compensation
+- Relocation
+- Communication
+- Leadership
+- Other
+
+### Sentiment (4)
+- Positive
+- Neutral
+- Negative
+- Mixed
+
+### Source Methods (11)
+- Survey
+- Interview
+- Focus Group
+- Community Meeting
+- Public Participation
+- Grievance/Complaint
+- Field Engagement
+- Email
+- Digital Platform
+- Facilitator Observation
+- Other
+
+### Tests
+- 📋 Backend unit tests (to write)
+- 📋 Frontend integration tests (to write)
+- 📋 E2E tests (to write)
+
+### Acceptance Criteria (40 Items)
+- 📋 Stakeholder Response DocType created
+- 📋 All required fields present
+- 📋 Response Type controlled values defined
+- 📋 Theme controlled values defined
+- 📋 Sentiment (4 options) defined
+- 📋 Source/Method controlled values defined
+- 📋 Status workflow (Open/Reviewed/Closed) works
+- 📋 Response can link to Stakeholder (optional)
+- 📋 Response can link to Stakeholder Group
+- 📋 Response can link to Geographic Area
+- 📋 Response can link to Intervention
+- 📋 Response can link to Objective
+- 📋 All 8 API endpoints functional
+- 📋 Capture form component renders
+- 📋 Summary card component displays correctly
+- 📋 Response table displays correctly
+- 📋 Response detail view displays correctly
+- 📋 Theme analysis card displays correctly
+- 📋 Discrepancy alert displays correctly
+- 📋 Response trend chart displays correctly
+- 📋 Quick capture modal works
+- 📋 Filters work (sentiment, theme, area, etc.)
+- 📋 Response capture < 30 seconds per entry
+- 📋 Mobile responsive (form, table, charts)
+- 📋 No AI/NLP/sentiment analysis included
+- 📋 Existing Stakeholder/Geographic Area structures reused
+- 📋 Phases 1-4 architecture remains intact
+- 📋 End-to-end workflow works (capture → classify → analyze)
+- 📋 Discrepancy between measurement and feedback visible
+- 📋 All tests passing (unit + integration + E2E)
+- (+ 10 more criteria in PHASE_5_STAKEHOLDER_RESPONSE_PLAN.md)
+
+### Timeline
+- Backend: 📋 2-3 days (Copilot, after Phase 4 merges)
+- Frontend: 📋 2-3 days (Cursor)
+- Merge to develop: After both complete
+
+### Ready for
+→ Phase 6+ (Intelligence Layer - Attribution, Confidence, Automation)
+
+---
+
+## Phase 6+: Intelligence & Attribution (Future)
 
 **Questions:** 
 - Why is the change occurring? (attribution)
@@ -487,19 +696,21 @@ INSIGHTS:
 - **Advanced Analytics**
   - Demographic segmentation (ML-assisted)
   - Predictive outcome modeling
+  - AI-powered sentiment analysis (Phase 5 foundation)
   - Policy impact assessment
-  - AI-driven recommendations
   - Automated narratives and insights
+  - Early Warning Engine (response trend indicators)
 
-### Not in Phases 1-4 (Saved for 5+)
+### Not in Phases 1-5 (Saved for 6+)
 - ❌ Causal inference
 - ❌ Attribution modeling
 - ❌ Contribution analysis
 - ❌ Confidence scoring
+- ❌ AI sentiment analysis
 - ❌ Predictive analytics
-- ❌ AI-generated narratives
-- ❌ Advanced demographic modeling
 - ❌ Automated recommendations
+- ❌ Advanced demographic modeling
+- ❌ Automated narratives
 
 ---
 
@@ -511,7 +722,8 @@ INSIGHTS:
 | **2** | Measurement | Whether? | 🔄 Backend done | feature/phase-2 | 1044bf7 | 🔄 | ✅ |
 | **3** | Evidence | How? | 📋 Planned | feature/phase-3 | e3979c2 | 📋 | 📋 |
 | **4** | Segmentation | Who & Where? | 📋 Planned | feature/phase-4 | 371cd8f | 📋 | 📋 |
-| **5+** | Attribution | Why & How Much? | 🔮 Future | - | - | - | - |
+| **5** | Voice | What are they saying? | 📋 Planned | feature/phase-5 | 7d21c24 | 📋 | 📋 |
+| **6+** | Intelligence | Why & How much? | 🔮 Future | - | - | - | - |
 
 ---
 
@@ -529,30 +741,25 @@ Measurement Record (Phase 1, enhanced in Phase 2-4)
   ├─ Stakeholder Segment (Phase 4)
   └─ Geographic Area (Phase 4)
           ↓
-Evidence Record (Phase 3)
-  ├─ Evidence Type
-  ├─ Collection Date
-  ├─ Source
-  ├─ Verification Status
-  └─ Attachments
-          ↓
-Progress/Outcome Analysis (Phase 2)
-  ├─ Current Value
-  ├─ Target Value
-  ├─ Progress %
-  ├─ Status
-  └─ Trend
-          ↓
-Disaggregated Analysis (Phase 4)
-  ├─ By Stakeholder Segment
+Evidence Record (Phase 3)         Stakeholder Response (Phase 5)
+  ├─ Evidence Type                  ├─ Response Text
+  ├─ Collection Date                ├─ Response Date
+  ├─ Source                         ├─ Response Type
+  ├─ Verification Status            ├─ Theme
+  └─ Attachments                    ├─ Sentiment
+          ↓                          ├─ Source/Method
+Progress/Outcome Analysis (Phase 2) └─ Status
+  ├─ Current Value                        ↓
+  ├─ Target Value                   Discrepancy Detection
+  ├─ Progress %                      (Measured vs. Qualitative)
+  ├─ Status                                ↓
+  └─ Trend                          Attribution & Impact (Phase 6+)
+          ↓                           ├─ Causal Effect
+Disaggregated Analysis (Phase 4)     ├─ Confidence Score
+  ├─ By Stakeholder Segment         └─ Automated Recommendations
   ├─ By Geographic Area
   ├─ Consistency Score
   └─ Underperformance Identification
-          ↓
-Attribution & Impact (Phase 5+)
-  ├─ Causal Effect
-  ├─ Confidence Score
-  └─ Automated Recommendations
 ```
 
 ---
@@ -565,6 +772,7 @@ Attribution & Impact (Phase 5+)
 - 🔄 Phase 2 Frontend: In Progress (Cursor) - 2-3 days
 - 📋 Phase 3 Backend: Ready (Copilot) - starts after Phase 2 merges
 - 📋 Phase 4 Backend: Ready (Copilot) - starts after Phase 3 merges
+- 📋 Phase 5 Backend: Ready (Copilot) - starts after Phase 4 merges
 
 ### Week 2
 - ✅ Phase 2 Frontend: Complete (Cursor)
@@ -572,6 +780,7 @@ Attribution & Impact (Phase 5+)
 - 🔄 Phase 3 Backend: In Progress (Copilot) - 2-3 days
 - 🔄 Phase 3 Frontend: Ready (Cursor) - starts after backend done
 - 📋 Phase 4 Backend: Ready (Copilot) - starts after Phase 3 merges
+- 📋 Phase 5 Backend: Ready (Copilot) - starts after Phase 4 merges
 
 ### Week 3
 - ✅ Phase 3 Backend: Complete (Copilot)
@@ -579,17 +788,26 @@ Attribution & Impact (Phase 5+)
 - 🔄 Phase 3 Frontend: In Progress (Cursor) - 2-3 days
 - 🔄 Phase 4 Backend: In Progress (Copilot) - 2-3 days (parallel)
 - 📋 Phase 4 Frontend: Ready (Cursor) - starts after backend done
+- 📋 Phase 5 Backend: Ready (Copilot) - starts after Phase 4 merges
 
 ### Week 4
 - ✅ Phase 3 Frontend: Complete (Cursor)
 - ✅ Phase 3 Merge to develop + Create PR #13
 - ✅ Phase 4 Backend: Complete (Copilot)
 - 🔄 Phase 4 Frontend: In Progress (Cursor) - 2-3 days
+- 🔄 Phase 5 Backend: In Progress (Copilot) - 2-3 days (parallel)
+- 📋 Phase 5 Frontend: Ready (Cursor) - starts after backend done
 
 ### Week 5
 - ✅ Phase 4 Frontend: Complete (Cursor)
 - ✅ Phase 4 Merge to develop + Create PR #14
-- 🎉 **ALL 4 PHASES COMPLETE**
+- ✅ Phase 5 Backend: Complete (Copilot)
+- 🔄 Phase 5 Frontend: In Progress (Cursor) - 2-3 days
+
+### Week 6
+- ✅ Phase 5 Frontend: Complete (Cursor)
+- ✅ Phase 5 Merge to develop + Create PR #15
+- 🎉 **ALL 5 PHASES COMPLETE**
 
 ---
 
@@ -599,56 +817,26 @@ Attribution & Impact (Phase 5+)
 **Status:** ✅ Ready to create
 **When:** Immediately
 **Scope:** Recap of Phase 1 (already merged to develop)
-**Content:**
-- Summary of Phase 1 deliverables
-- Architecture overview
-- DocTypes created
-- Services implemented
-- Acceptance criteria met
-- Link to implementation guide
 
 ### PR #12: Phase 2 - Outcome Measurement & Dashboard
 **Status:** 🔄 Waiting for frontend completion
 **When:** After Cursor completes frontend (2-3 days)
 **Scope:** Backend + Frontend integration
-**Content:**
-- Summary of Phase 2 deliverables
-- Backend services + API endpoints
-- Frontend components + integration
-- Progress tracking & dashboarding
-- Test results
-- User journey (Ward 12 example)
-- Acceptance criteria met (backend + frontend)
 
 ### PR #13: Phase 3 - Evidence Layer
 **Status:** 📋 Ready to create (after Phase 2 merges)
 **When:** After Copilot + Cursor complete (4-6 days from PR #12)
 **Scope:** Evidence DocType + Services + Frontend
-**Content:**
-- Summary of Phase 3 deliverables
-- Communication Evidence DocType
-- Evidence management services
-- Evidence API endpoints
-- Frontend components
-- Verification workflow (3 states)
-- Test results
-- Audit trail example
-- Acceptance criteria met (backend + frontend)
 
 ### PR #14: Phase 4 - Stakeholder & Geographic Analysis
 **Status:** 📋 Ready to create (after Phase 3 merges)
 **When:** After Copilot + Cursor complete (4-6 days from PR #13)
 **Scope:** Disaggregation services + Frontend
-**Content:**
-- Summary of Phase 4 deliverables
-- Disaggregation analysis services
-- Disaggregation API endpoints
-- Frontend components (cards, tables, filters, compare)
-- Stakeholder + Geographic segmentation
-- Consistency & underperformance analysis
-- Test results
-- Disaggregated outcome example
-- Acceptance criteria met (backend + frontend)
+
+### PR #15: Phase 5 - Stakeholder Response & Feedback
+**Status:** 📋 Ready to create (after Phase 4 merges)
+**When:** After Copilot + Cursor complete (4-6 days from PR #14)
+**Scope:** Response DocType + Services + Frontend
 
 ---
 
@@ -666,7 +854,10 @@ Attribution & Impact (Phase 5+)
 | Phase 4 Backend | Sep 12-13 | 📋 Pending |
 | Phase 4 Frontend | Sep 14-15 | 📋 Pending |
 | Phase 4 Merged | Sep 15 | 📋 Pending |
-| **All Phases Complete** | **Sep 15** | **📋 Pending** |
+| Phase 5 Backend | Sep 17-18 | 📋 Pending |
+| Phase 5 Frontend | Sep 19-20 | 📋 Pending |
+| Phase 5 Merged | Sep 20 | 📋 Pending |
+| **All Phases Complete** | **Sep 20** | **📋 Pending** |
 
 ---
 
@@ -691,9 +882,9 @@ Attribution & Impact (Phase 5+)
 ### Architecture
 - ✅ No duplicate DocTypes
 - ✅ Existing entities reused
-- ✅ Clean data flow (Intervention → Objective → Indicator → Measurement → Evidence → Disaggregation)
-- ✅ Extensible for Phase 5+
-- ✅ No AI/advanced analytics in Phases 1-4
+- ✅ Clean data flow (Intervention → Objective → Indicator → Measurement → Evidence → Disaggregation → Response → Analysis)
+- ✅ Extensible for Phase 6+
+- ✅ No AI/advanced analytics in Phases 1-5
 
 ### Documentation
 - ✅ Implementation guides for all phases
@@ -705,9 +896,9 @@ Attribution & Impact (Phase 5+)
 
 ---
 
-## What's NOT in Phases 1-4
+## What's NOT in Phases 1-5
 
-❌ **Deliberately Excluded (Phase 5+):**
+❌ **Deliberately Excluded (Phase 6+):**
 - Causal inference or attribution modeling
 - Contribution analysis (multiple interventions → shared outcome)
 - Confidence/quality scoring
@@ -718,8 +909,10 @@ Attribution & Impact (Phase 5+)
 - Automated recommendations
 - Advanced statistical models
 - Evidence quality algorithms
+- AI sentiment analysis (manual in Phase 5)
+- Automated theme extraction
 
-**Why?** Phases 1-4 establish the measurement foundation. Phase 5+ adds intelligence.
+**Why?** Phases 1-5 establish the measurement and voice foundation. Phase 6+ adds intelligence.
 
 ---
 
@@ -728,9 +921,11 @@ Attribution & Impact (Phase 5+)
 **Documentation:**
 - `docs/PHASE_1_IMPLEMENTATION_GUIDE.md` - Phase 1 architecture
 - `docs/PHASE_2_IMPLEMENTATION_GUIDE.md` - Phase 2 architecture
+- `.cursor/phase-2-cursor-brief.md` - Phase 2 frontend prompts
 - `docs/PHASE_3_EVIDENCE_LAYER_PLAN.md` - Phase 3 architecture
 - `docs/PHASE_4_STAKEHOLDER_GEOGRAPHIC_PLAN.md` - Phase 4 architecture
-- `.cursor/phase-2-cursor-brief.md` - Phase 2 frontend prompts
+- `docs/PHASE_5_STAKEHOLDER_RESPONSE_PLAN.md` - Phase 5 architecture
+- `docs/MASTER_ROADMAP_ALL_PHASES.md` - This comprehensive roadmap
 
 **Branches:**
 - `develop` - Latest stable (Phase 1 + Phase 2 backend merged)
@@ -738,6 +933,7 @@ Attribution & Impact (Phase 5+)
 - `feature/phase-2-outcome-measurement` - Phase 2 complete (backend), frontend in progress
 - `feature/phase-3-evidence-layer` - Phase 3 architecture
 - `feature/phase-4-stakeholder-geographic` - Phase 4 architecture
+- `feature/phase-5-stakeholder-response` - Phase 5 architecture
 
 **Team:**
 - **Backend:** GitHub Copilot
@@ -749,7 +945,7 @@ Attribution & Impact (Phase 5+)
 
 ## The TrustLedger Vision
 
-**By end of Phase 4:**
+**By end of Phase 5:**
 
 TrustLedger will enable practitioners to confidently answer:
 
@@ -767,10 +963,17 @@ TrustLedger will enable practitioners to confidently answer:
    - Identify who's benefiting and who's being left behind
    - Spot geographic and demographic gaps
 
-**This is the foundation for Phase 5+ decision intelligence.**
+5. **What are stakeholders saying about the change?** (Phase 5)
+   - Capture qualitative feedback
+   - Identify themes and concerns
+   - Compare quantitative vs. qualitative findings
+   - Expose discrepancies and opportunities
+
+**This is the foundation for Phase 6+ decision intelligence.**
 
 ---
 
-*Master Roadmap prepared by: GitHub Copilot*  
-*Date: September 2, 2026*  
-*All 4 phases architected. Ready for execution.*
+**Master Roadmap prepared by: GitHub Copilot**  
+**Date: September 2, 2026**  
+**All 5 phases architected. Ready for execution.**  
+**Complete TrustLedger vision: From Framework to Voice to Intelligence**
