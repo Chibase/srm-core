@@ -51,8 +51,9 @@ class TestReady(FrappeTestCase):
 
 	def test_ready_whitelist_guest_safe(self):
 		frappe.set_user("Guest")
-		with patch("srm_core.api.ready.check_db", return_value={"status": "ok"}), patch(
-			"srm_core.api.ready.check_cache", return_value={"status": "ok"}
+		with (
+			patch("srm_core.api.ready.check_db", return_value={"status": "ok"}),
+			patch("srm_core.api.ready.check_cache", return_value={"status": "ok"}),
 		):
 			payload = ready()
 		self.assertEqual(payload["status"], "ready")
@@ -62,8 +63,9 @@ class TestReady(FrappeTestCase):
 		from frappe.website.serve import get_response
 
 		frappe.set_user("Guest")
-		with patch("srm_core.api.ready.check_db", return_value={"status": "ok"}), patch(
-			"srm_core.api.ready.check_cache", return_value={"status": "ok"}
+		with (
+			patch("srm_core.api.ready.check_db", return_value={"status": "ok"}),
+			patch("srm_core.api.ready.check_cache", return_value={"status": "ok"}),
 		):
 			response = get_response("/ready")
 		self.assertEqual(response.status_code, 200)
@@ -77,10 +79,13 @@ class TestReady(FrappeTestCase):
 		from frappe.website.serve import get_response
 
 		frappe.set_user("Guest")
-		with patch(
-			"srm_core.api.ready.check_db",
-			return_value={"status": "fail", "detail": "unavailable"},
-		), patch("srm_core.api.ready.check_cache", return_value={"status": "ok"}):
+		with (
+			patch(
+				"srm_core.api.ready.check_db",
+				return_value={"status": "fail", "detail": "unavailable"},
+			),
+			patch("srm_core.api.ready.check_cache", return_value={"status": "ok"}),
+		):
 			response = get_response("/ready")
 		self.assertEqual(response.status_code, 503)
 		data = json.loads(response.get_data(as_text=True))
@@ -91,12 +96,17 @@ class TestReady(FrappeTestCase):
 		from frappe.website.serve import get_response
 
 		frappe.set_user("Guest")
-		with patch("srm_core.api.ready.check_db", return_value={"status": "ok"}), patch(
-			"srm_core.api.ready.check_cache",
-			return_value={"status": "fail", "detail": "unavailable"},
+		with (
+			patch("srm_core.api.ready.check_db", return_value={"status": "ok"}),
+			patch(
+				"srm_core.api.ready.check_cache",
+				return_value={"status": "fail", "detail": "unavailable"},
+			),
 		):
 			response = get_response("/ready")
 		self.assertEqual(response.status_code, 503)
-		data = json.loads(response.get_data(as_text=True))
-		self.assertEqual(data["status"], "not_ready")
-		self.assertEqual(data["checks"]["cache"]["status"], "fail")
+		self.assertIn("application/json", response.headers.get("Content-Type", ""))
+		payload = json.loads(response.get_data(as_text=True))
+		self.assertEqual(payload["status"], "not_ready")
+		self.assertEqual(payload["checks"]["db"]["status"], "ok")
+		self.assertEqual(payload["checks"]["cache"]["status"], "fail")

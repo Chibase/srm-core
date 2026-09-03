@@ -6,6 +6,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_to_date, cint, flt, get_datetime, now_datetime
 
+from srm_core.services.attachments import validate_incident_attachment_rows
+from srm_core.services.comments import validate_incident_comment_rows
 from srm_core.services.escalation import (
 	ESCALATION_NONE,
 	derive_escalation_level,
@@ -14,8 +16,6 @@ from srm_core.services.escalation import (
 	validate_high_priority_assignment,
 )
 from srm_core.services.geographic_area import validate_geographic_area_link
-from srm_core.services.attachments import validate_incident_attachment_rows
-from srm_core.services.comments import validate_incident_comment_rows
 from srm_core.services.impact import (
 	compute_weighted_score,
 	score_to_band,
@@ -26,18 +26,18 @@ from srm_core.services.investigation_tasks import (
 	get_blocking_tasks,
 	validate_investigation_task_rows,
 )
-from srm_core.services.risk_rollup import (
-	apply_incident_risk_linkage,
-	linked_risk_changed,
-	touch_risk_register_with_incident,
-	validate_residual_risk_close_gate,
-)
 from srm_core.services.permissions import user_has_iks_privileged_role, user_has_system_manager_role
 from srm_core.services.priority import (
 	compute_priority_score,
 	priority_band,
 	resolve_sentiment_signal,
 	sla_hours_for_priority,
+)
+from srm_core.services.risk_rollup import (
+	apply_incident_risk_linkage,
+	linked_risk_changed,
+	touch_risk_register_with_incident,
+	validate_residual_risk_close_gate,
 )
 from srm_core.services.statuses import (
 	INCIDENT_CLOSED,
@@ -131,9 +131,7 @@ class SRMIncident(Document):
 		self._validate_investigation_task_close_gate()
 
 		if self.status in INCIDENT_RESOLUTION_REQUIRED_STATUSES and not self.resolution_summary:
-			frappe.throw(
-				_("Resolution summary is required when status is Resolved or Closed.")
-			)
+			frappe.throw(_("Resolution summary is required when status is Resolved or Closed."))
 
 		if self.status == INCIDENT_CLOSED:
 			if not self.closed_on:
@@ -238,9 +236,7 @@ class SRMIncident(Document):
 
 		if is_escalated and (
 			not self.escalated_on
-			or should_refresh_escalation_stamp(
-				previous_level, new_level, was_escalated, is_escalated
-			)
+			or should_refresh_escalation_stamp(previous_level, new_level, was_escalated, is_escalated)
 		):
 			self.escalated_on = now_datetime()
 			self.escalated_by = frappe.session.user
@@ -285,9 +281,7 @@ class SRMIncident(Document):
 			self.is_new() or not previous or previous.status != INCIDENT_CLOSED
 		)
 		if closing and not user_has_iks_privileged_role():
-			frappe.throw(
-				_("Only SRM Admin or System Manager can close IKS-sensitive incidents.")
-			)
+			frappe.throw(_("Only SRM Admin or System Manager can close IKS-sensitive incidents."))
 
 		if self.docstatus == 1 and self.has_value_changed("resolution_summary"):
 			if not user_has_iks_privileged_role():
@@ -299,11 +293,7 @@ class SRMIncident(Document):
 				)
 			self._apply_iks_audit_trail()
 
-		if (
-			self.docstatus == 1
-			and self.has_value_changed("status")
-			and user_has_iks_privileged_role()
-		):
+		if self.docstatus == 1 and self.has_value_changed("status") and user_has_iks_privileged_role():
 			self._apply_iks_audit_trail()
 
 	def _apply_iks_audit_trail(self):

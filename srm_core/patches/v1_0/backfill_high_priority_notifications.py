@@ -38,10 +38,7 @@ def execute():
 
 		intents = []
 		subject = f"High-priority open incident: {incident.incident_title}"
-		message = (
-			f"Bootstrap alert for {incident.priority_level} incident "
-			f"{incident.incident_title}."
-		)
+		message = f"Bootstrap alert for {incident.priority_level} incident {incident.incident_title}."
 		for recipient in recipients:
 			for channel in (CHANNEL_IN_APP, CHANNEL_EMAIL):
 				key = make_notification_idempotency_key(

@@ -18,17 +18,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect Node lockfile
+        id: lock
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: No Node lockfile
+        if: steps.lock.outputs.present != 'true'
+        run: echo "No package-lock.json / yarn.lock found; skipping Node install/lint/test."
+
       - name: Setup Node
+        if: steps.lock.outputs.present == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
       - name: Install
+        if: steps.lock.outputs.present == 'true'
         run: npm ci
 
       - name: Lint
+        if: steps.lock.outputs.present == 'true'
         run: npm run lint --if-present
 
       - name: Test
+        if: steps.lock.outputs.present == 'true'
         run: npm test --if-present

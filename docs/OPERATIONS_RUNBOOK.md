@@ -8,6 +8,30 @@ Operational commands for `srm_core` maintenance. All commands are **idempotent**
 
 ---
 
+## Platform probes
+
+Public JSON liveness/readiness probes for load balancers and monitors. Full contract: [Platform probes in TRUSTLEDGER_API.md](./TRUSTLEDGER_API.md#platform-probes).
+
+| Path | Purpose | Expected HTTP | Key JSON fields |
+|------|---------|---------------|-----------------|
+| `GET /health` | Liveness (process up) | `200` | `status` (`"ok"`), `service` (`"srm-core"`), `timestamp` (ISO-8601 UTC) |
+| `GET /ready` | Readiness (DB + cache) | `200` ready / `503` not ready | `status` (`"ready"`\|`"not_ready"`), `service`, `timestamp`, `checks.db` / `checks.cache` (`ok`\|`fail`, optional `detail`) |
+
+Example checks (replace host with site URL):
+
+```bash
+curl -sS -o /dev/null -w "%{http_code}\n" https://sl2b.chibaseconsulting.co.za/health
+curl -sS https://sl2b.chibaseconsulting.co.za/health
+
+curl -sS -o /dev/null -w "%{http_code}\n" https://sl2b.chibaseconsulting.co.za/ready
+curl -sS https://sl2b.chibaseconsulting.co.za/ready
+```
+
+- `/health` does not check DB/cache; use for process liveness only.
+- `/ready` fails closed (`503`) if DB or cache check fails; both responses use `Cache-Control: no-store`.
+
+---
+
 ## Rebuild incident timeline
 
 Rebuild missing baseline timeline events (`INCIDENT_CREATED`, status snapshot) for incidents.

@@ -69,12 +69,12 @@ def validate_incident_comment_rows(rows, previous_rows=None):
 
 		if len(row.comment_text or "") > MAX_COMMENT_LENGTH:
 			frappe.throw(
-				_("Comment text exceeds the maximum length of {0} characters.").format(
-					MAX_COMMENT_LENGTH
-				)
+				_("Comment text exceeds the maximum length of {0} characters.").format(MAX_COMMENT_LENGTH)
 			)
 
-		is_new_row = getattr(row, "is_new", lambda: True)() or not row.name or row.name not in previous_by_name
+		is_new_row = (
+			getattr(row, "is_new", lambda: True)() or not row.name or row.name not in previous_by_name
+		)
 		if is_new_row:
 			row.comment_by = row.comment_by or user
 			row.comment_on = row.comment_on or now

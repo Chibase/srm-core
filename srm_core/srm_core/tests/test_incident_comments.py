@@ -153,9 +153,7 @@ class TestIncidentComments(FrappeTestCase):
 		doc.append(
 			"comments",
 			{
-				"comment_text": (
-					f"Looping in @{self.analyst_user} and @Administrator for review."
-				),
+				"comment_text": (f"Looping in @{self.analyst_user} and @Administrator for review."),
 			},
 		)
 		doc.insert()

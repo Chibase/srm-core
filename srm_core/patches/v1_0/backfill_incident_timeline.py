@@ -58,9 +58,6 @@ def execute():
 			status_events += 1
 
 	frappe.db.commit()
-	summary = (
-		f"Incident timeline backfill: created_events={created}, "
-		f"status_snapshot_events={status_events}"
-	)
+	summary = f"Incident timeline backfill: created_events={created}, status_snapshot_events={status_events}"
 	frappe.logger("srm_core").info(summary)
 	print(summary)
