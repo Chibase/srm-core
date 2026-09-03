@@ -100,7 +100,7 @@ class TestReady(FrappeTestCase):
 			patch("srm_core.api.ready.check_db", return_value={"status": "ok"}),
 			patch(
 				"srm_core.api.ready.check_cache",
-				return_value={"status": "fail", "detail": "cache unavailable"},
+				return_value={"status": "fail", "detail": "unavailable"},
 			),
 		):
 			response = get_response("/ready")
